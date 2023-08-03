@@ -89,7 +89,7 @@ async function convert() {
             document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
             status("Extracting images...");
             //Get images, sounds, and project's JSON
-            await extractImagesFromZippedFileV2(document.getElementById('fileInput'), function (images) {
+            await extractImagesFromZippedFile(document.getElementById('fileInput'), function (images) {
                 scratchProject = JSON.parse(scratchProjectJSON);
 
                 workspace = workspace.concat(images);
@@ -1217,18 +1217,27 @@ async function extractImagesFromZippedFile(fileInput, callback) {
                         );
                     } else {
                         if (getFileExtension(relativePath) == "json") {
-                            file.async('text').then(function (jsonData) {
-                                scratchProjectJSON = jsonData;
-                            })
+                            imagePromises.push(
+                                file.async('text').then(function (jsonData) {
+                                    scratchProjectJSON = jsonData;
+                                })
+                            );
                         }
                         if (getFileExtension(relativePath) == "svg") {
                             imagePromises.push(
-                                file.async('text').then(await function (svgData) {
-                                    /*var image = {
+                                file.async('text').then(function (svgData) {
+                                    var image = {
                                         name: "Template Scratch/Assets/Costumes/" + relativePath,
                                         data: stringToArrayBuffer(svgData),
-                                    };*/
-                                    imagePromises.push(
+                                    };
+                                    images.push(image);
+                                    //SVG meta
+                                    var imageMeta = {
+                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
+                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
+                                    };
+                                    images.push(imageMeta);
+                                    /*imagePromises.push(
                                         convertSvgToPngV2(svgData, (error, pngBlob) => {
                                             if (error) {
                                                 console.error('Error converting SVG to PNG:', error);
@@ -1242,9 +1251,9 @@ async function extractImagesFromZippedFile(fileInput, callback) {
                                                 return pngBlob;
                                             }
                                         })
-                                    );
+                                    );*/
                                 })
-                                .then(function (fileData) {
+                                /*.then(function (fileData) {
                                     console.log("file data : " + fileData);
                                     var image = {
                                         name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
@@ -1262,9 +1271,9 @@ async function extractImagesFromZippedFile(fileInput, callback) {
                                     var imageMeta = {
                                         name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
                                         data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
-                                    };*/
+                                    };
                                     images.push(imageMeta);
-                                })
+                                })*/
                             );
                         }
                     }
