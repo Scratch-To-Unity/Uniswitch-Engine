@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script src="SB3_To_Unity_Converter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
+
+    <div style="text-align: center; ">
+        <br />
+        <input type="file" accept="application/x.scratch.sb3" id="fileInput" style="padding: 10px;" />
+        <br />
+        <button type="button" onclick="convert()" style="padding: 10px;">Start conversion</button>
+        <br />
+        <div id="status" style="padding: 10px;">Import file first</div>
+        <br />
+        <div id="fact" style="padding: 10px;">Welcome !</div>
+    </div>
+
+</body>
+</html>
