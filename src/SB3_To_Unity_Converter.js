@@ -14,6 +14,8 @@ let warp = false;
 let loopIdx = 0;
 let currentFunctionName;
 
+let progress = 0;
+let estimatedWork = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
@@ -73,7 +75,7 @@ async function convert() {
     //Importing template
     try {
         status("Importing template...");
-        const fileArray = await unzipFromURL(templatePath);
+        const fileArray = await unzipFromURL(templatePath);  //Action 1
         workspace = fileArray;
 
 
@@ -82,15 +84,15 @@ async function convert() {
     }
     const url = blockLibPath;
     //Get BlockLib
-    getJSONData(url)
+    getJSONData(url)  //Action 2
         .then (async jsonData => {
             blockDic = jsonData;
             console.log(jsonData);
             document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
             status("Extracting images...");
             //Get images, sounds, and project's JSON
-            await extractImagesFromZippedFile(document.getElementById('fileInput'), function (images) {
-                scratchProject = JSON.parse(scratchProjectJSON);
+            await extractImagesFromZippedFile(document.getElementById('fileInput'), function (images) { //Action 3
+                scratchProject = JSON.parse(scratchProjectJSON); //Action 4
 
                 workspace = workspace.concat(images);
 
@@ -98,12 +100,13 @@ async function convert() {
 
                 status("Generating unity scene...");
                 
-                handleSprites(scratchProject);
+                handleSprites(scratchProject);  //Action 5
                 workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
 
                 status("Zipping unity folder...");
+                console.log("progress until here : " + progress);
                 console.log(workspace);
-                zipAndDownloadFiles(workspace);
+                zipAndDownloadFiles(workspace);  //Action 6
 
             });
         });
@@ -1055,6 +1058,12 @@ function padStringTo16(string) {
     }
 }
 
+function addProgress() {
+    progress++;
+    console.log("progress : " + progress);
+    console.log("progress percentage : " + progress / estimatedWork * 100 + "%.");
+}
+
 //----------------------------------------------------FILE HANDLING PART-----------------------------------------------
 
 function getFileExtension(filename) {
@@ -1140,7 +1149,10 @@ function unzipFromURL(url) {
                 var fileCount = Object.keys(zip.files).length;
                 var processedCount = 0;
 
+                estimatedWork += fileCount;
+
                 Object.keys(zip.files).forEach(function (filename) {
+                    addProgress();
                     zip.files[filename].async('arraybuffer')
                         .then(function (data) {
                             var file = {
