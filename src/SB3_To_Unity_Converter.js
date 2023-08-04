@@ -66,6 +66,8 @@ async function convert() {
 
     usedIdentifiers = [];
 
+    progress = 0;
+
     /*getProjectData('60917032').then((data) => {
         console.log(data);
     }).catch((error) => {
@@ -1060,8 +1062,10 @@ function padStringTo16(string) {
 
 function addProgress() {
     progress++;
+    let percentage = progress / estimatedWork * 100;
     console.log("progress : " + progress);
-    console.log("progress percentage : " + progress / estimatedWork * 100 + "%.");
+    console.log("progress percentage : " + percentage + "%.");
+    document.getElementById("progressBar").style.width = percentage + '%';
 }
 
 //----------------------------------------------------FILE HANDLING PART-----------------------------------------------
