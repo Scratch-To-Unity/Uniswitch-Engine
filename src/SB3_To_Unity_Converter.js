@@ -67,7 +67,11 @@ async function convert() {
     usedIdentifiers = [];
 
     progress = 0;
-
+    estimatedWork = 0;
+    estimatedWork += 1; //for the getJSONData
+    estimatedWork += 1; //for the JSON.Parse()
+    estimatedWork += 1; //for the zipping
+    estimatedWork += 100; //for the zipping
     /*getProjectData('60917032').then((data) => {
         console.log(data);
     }).catch((error) => {
@@ -87,7 +91,8 @@ async function convert() {
     const url = blockLibPath;
     //Get BlockLib
     getJSONData(url)  //Action 2
-        .then (async jsonData => {
+        .then(async jsonData => {
+            addProgress();
             blockDic = jsonData;
             console.log(jsonData);
             document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
@@ -95,7 +100,7 @@ async function convert() {
             //Get images, sounds, and project's JSON
             await extractImagesFromZippedFile(document.getElementById('fileInput'), function (images) { //Action 3
                 scratchProject = JSON.parse(scratchProjectJSON); //Action 4
-
+                addProgress();
                 workspace = workspace.concat(images);
 
                 unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
@@ -108,6 +113,7 @@ async function convert() {
                 status("Zipping unity folder...");
                 console.log("progress until here : " + progress);
                 console.log(workspace);
+                estimatedWork += workspace.length;
                 zipAndDownloadFiles(workspace);  //Action 6
 
             });
@@ -136,10 +142,12 @@ function status(string) {
 
 function handleSprites(scratchProject) {
     var sprites = scratchProject.targets;
+    estimatedWork += Object.keys(sprites).length;
     sprites.forEach(sprite => handleSprite(sprite));
 }
 
 function handleSprite(sprite) {
+    addProgress();
     console.log("Handling sprite : " + sprite.name)
     //fileID : 21300000 for bitmap
     //fileID : 3286163911610860551 for SVG
@@ -275,7 +283,6 @@ function addScript(sprite) {
         }
     }
     code += "}}";
-    console.log(startBlocks);
 
     //adding all the start coroutines
     startBlocks.forEach(blockID => {
@@ -348,7 +355,6 @@ function addScript(sprite) {
         code += 'public static string username = "' + playerUsername + '";';
         code += "public static void ResetTimer(){timer = 0;}"
         code += "}";
-        console.log(globalVariables);
     }
 
     //formating and cleaning the code
@@ -369,7 +375,6 @@ function addScript(sprite) {
     workspace.push(file);
     workspace.push(meta);
 
-    console.log(blockList);
     console.log(code);
 }
 
@@ -471,7 +476,7 @@ function addBlock(blockID) {
             l += proceduresDefinition;
         }
     }
-    if (block.opcode == "control_repeat") {
+    if (block.opcode == "control_repeat" && block.inputs.SUBSTACK != undefined) {
         loopIdx++;
         var times = "TIMES" + loopIdx;
         var iteration = "ITERATION" + loopIdx;
@@ -1060,11 +1065,12 @@ function padStringTo16(string) {
     }
 }
 
-function addProgress() {
-    progress++;
+function addProgress(value = 1) {
+    progress += value;
     let percentage = progress / estimatedWork * 100;
-    console.log("progress : " + progress);
-    console.log("progress percentage : " + percentage + "%.");
+    console.warn("progress : " + progress);
+    console.warn("progress percentage : " + percentage + "%.");
+    console.warn("estimated work : " + estimatedWork + ".");
     document.getElementById("progressBar").style.width = percentage + '%';
 }
 
@@ -1116,12 +1122,17 @@ function zipAndDownloadFiles(fileArray) {
     fileArray.forEach(function (file) {
         // Add each file to the zip
         zip.file(file.name, file.data);
+        addProgress();
     });
-
+    let previousPercent = 0;
     // Generate the zip file asynchronously
-    zip.generateAsync({ type: 'blob' })
+    zip.generateAsync({ type: 'blob' }, function updateCallback(metadata) {
+        //progress = metadata.percent / 100 * estimatedWork;
+        addProgress(metadata.percent - previousPercent);
+        previousPercent = metadata.percent;
+    })
         .then(function (content) {
-
+            addProgress();
             // Create a download link element
             var link = document.createElement('a');
             link.href = URL.createObjectURL(content);
@@ -1153,7 +1164,7 @@ function unzipFromURL(url) {
                 var fileCount = Object.keys(zip.files).length;
                 var processedCount = 0;
 
-                estimatedWork += fileCount;
+                estimatedWork += fileCount; //number of template files
 
                 Object.keys(zip.files).forEach(function (filename) {
                     addProgress();
@@ -1199,8 +1210,10 @@ async function extractImagesFromZippedFile(fileInput, callback) {
         JSZip.loadAsync(zipData)
             .then(async function (zip) {
                 var imagePromises = [];
-
+                estimatedWork += Object.keys(zip.files).length;
+                console.log(zip);
                 zip.forEach(async function (relativePath, file) {
+                    addProgress();
                     if (file.dir) {
                         return; // Ignore directories
                     }
