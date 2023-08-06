@@ -1,8 +1,9 @@
-let scratchProjectJSON = "";
+﻿let scratchProjectJSON = "";
 let unityGameScene =  null;
 let scratchProject =  null;
 let blockList;
 let blockDic;
+let emojilib;
 let globalVariables = [];
 let globalLists =     [];
 let localVariables =  [];
@@ -25,6 +26,7 @@ let endTime = 0;
 //paths
 const templatePath = "Templates/Template Scratch v13.zip";
 const blockLibPath = "blockList.json";
+
 
 //HTML linking
 const sb3Doc = document.getElementById('fileInput');
@@ -60,7 +62,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //the stage's renderer is causing scene errors sometimes                                                Whyy
 //if standardized name is null, replace it by a random name stored in a linked-list
 //create a function getKey that returns a boolean, and one that returns 0 or 1                          Bruh
-//Num�ros dans les noms de variable                                                                     Doing
+//Numéros dans les noms de variable                                                                     Doing
 //Add screen edge detection (relative to screen size) :/
 //don't write int, only floats in the code plss
 //clones don't spawn with the isClone flag set to true :O    -> Instantiate the GameObject in a parent for clones
@@ -87,6 +89,13 @@ async function convert() {
     estimatedWork += 1; //for the JSON.Parse()
     estimatedWork += 1; //for the zipping
     estimatedWork += 200; //for the zipping
+
+    /*await fetch("https://cdn.jsdelivr.net/npm/emojilib@3.0.10/dist/emoji-en-US.json")
+        .then(response =>{
+            response.json().then(value => { emojilib = value; });
+            console.error(emojilib);
+            console.error(emojilib["grinning"]);
+        });*/
 
     let fileInput = document.getElementById('fileInput').files[0];
     estimatedProjectSize = fileInput.size;
@@ -1026,12 +1035,81 @@ function doesArrayContainName(arr, targetName) {
 }
 
 function standardizeName(name) {
-    name = removeNonLetters(name.replace(/[^a-zA-Z0-9]/g, ""));
+    //name = removeNonLetters(name.replace(/[^a-zA-Z0-9]/g, ""));
+    name = removeNonLetters(scratchNameToUnityName(name));
     if (reservedKeywords.find(keyword => keyword == name) == undefined) {
         return name;
     } else {
         return name[0] + name;
     }
+}
+
+function scratchNameToUnityName(name){
+    const letterMap = {
+        '0': 'A',
+        '1': 'B',
+        '2': 'C',
+        '3': 'D',
+        '4': 'E',
+        '5': 'F',
+        '6': 'G',
+        '7': 'H',
+        '8': 'I',
+        '9': 'J',
+        '!': 'K',
+        '@': 'L',
+        '#': 'M',
+        '$': 'N',
+        '%': 'O',
+        '^': 'P',
+        '&': 'Q',
+        '*': 'R',
+        '(': 'S',
+        ')': 'T',
+        '_': 'U',
+        '-': 'V',
+        '+': 'W',
+        '=': 'X',
+        '[': 'Y',
+        ']': 'Z',
+        '{': 'a',
+        '}': 'b',
+        '|': 'c',
+        ';': 'd',
+        ':': 'e',
+        '\'': 'f',
+        '"': 'g',
+        '<': 'h',
+        '>': 'i',
+        ',': 'j',
+        '.': 'k',
+        '/': 'l',
+        '?': 'm',
+        '`': 'n',
+        '~': 'o',
+        '¡': 'p',
+        '¢': 'q',
+        '£': 'r',
+        '¤': 's',
+        '¥': 't',
+        '¦': 'u',
+        '§': 'v',
+        '¨': 'w',
+        '©': 'x',
+        'ª': 'y',
+        '«': 'z',
+        '¬': ' ',
+    };
+    let result = "";
+    for (var i = 0; i < name.length; i++) {
+        let char = letterMap[name[i]];
+        if (char == undefined) {
+            result += name[i];
+        } else {
+            result += char;
+        }
+    }
+    return result;
 }
 
 function containsDot(str) {
