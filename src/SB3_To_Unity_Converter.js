@@ -17,6 +17,9 @@ let projectName = "project";
 
 let progress = 0;
 let estimatedWork = 0;
+let estimatedProjectSize = 0;
+let startTime = 0;
+let endTime = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
@@ -42,6 +45,15 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 //https://www.notion.so/563bff1d0df54d9194eafd756b1ea68d?v=69b39a8c83e0455ab946972e61ad28a1
 
+//120Kb      => 2.5s
+//19800Kb    => 121s
+//210Kb      => 3.7s
+//52Kb       => 2.6s
+//1100Kb     => 7.5s
+//269Kb      => 9.8s
+//668Kb      => 5.1s
+//885Kb      => 7.6s
+
 
 //TO DO:
 //next template : v14
@@ -64,6 +76,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //----------------------------------------------------MAIN--------------------------------------------------------
 
 async function convert() {
+    startTime = performance.now();
     status("Started Converting...");
 
     usedIdentifiers = [];
@@ -73,19 +86,29 @@ async function convert() {
     estimatedWork += 1; //for the getJSONData
     estimatedWork += 1; //for the JSON.Parse()
     estimatedWork += 1; //for the zipping
-    estimatedWork += 100; //for the zipping
+    estimatedWork += 200; //for the zipping
 
     let fileInput = document.getElementById('fileInput').files[0];
+    estimatedProjectSize = fileInput.size;
     let projectID = document.getElementById('URLInput').value;
     if (projectID != "" && projectID.length > 5) {
-
+        status("Getting sb3 file from scratch's website.");
+        estimatedWork += 100;
         //API from https://github.com/forkphorus/sb-downloader
-
+        let previousPercent = 0;
+        let previousType = "";
         const options = {
             // May be called periodically with progress updates.
             onProgress: (type, loaded, total) => {
                 // type is 'metadata', 'project', 'assets', or 'compress'
                 console.log(type, loaded / total);
+                if (previousType != type) {
+                    previousType = type;
+                    previousPercent = 0;
+                }
+                let percent = loaded / total * 100;
+                addProgress((percent - previousPercent) / 4); //there are 4 steps I guess
+                previousPercent = percent;
             }
         };
         const project = await SBDL.downloadProjectFromID(projectID, options);
@@ -103,8 +126,14 @@ async function convert() {
         const projectBlob = new Blob([arrayBuffer]);
         fileInput = projectBlob;
         projectName = title;
+        estimatedProjectSize = arrayBuffer.byteLength;
     }
     console.log(fileInput);
+
+    //let estimatedTime = estimatedProjectSize / 1000 / 160;
+    let projectSizeMegaBytes = estimatedProjectSize / 1000 / 1000;
+    let estimatedTime = 5.45 ** (0.156 * projectSizeMegaBytes);
+    document.getElementById("time").innerHTML = "Estimated time : " + estimatedTime.toFixed(1) + "s";
 
     //Importing template
     try {
@@ -143,7 +172,7 @@ async function convert() {
                 console.log(workspace);
                 estimatedWork += workspace.length;
                 zipAndDownloadFiles(workspace);  //Action 6
-
+                
             });
         });
 }
@@ -1099,7 +1128,8 @@ function addProgress(value = 1) {
     //console.warn("progress : " + progress);
     //console.warn("progress percentage : " + percentage + "%.");
     //console.warn("estimated work : " + estimatedWork + ".");
-    document.getElementById("progressBar").style.width = percentage + '%';
+    document.getElementById("progressBar").innerHTML = percentage.toFixed(1) + "%";
+    document.getElementById("progressBar").style.width = percentage.toFixed(2) + '%';
 }
 
 //----------------------------------------------------FILE HANDLING PART-----------------------------------------------
@@ -1156,7 +1186,7 @@ function zipAndDownloadFiles(fileArray) {
     // Generate the zip file asynchronously
     zip.generateAsync({ type: 'blob' }, function updateCallback(metadata) {
         //progress = metadata.percent / 100 * estimatedWork;
-        addProgress(metadata.percent - previousPercent);
+        addProgress((metadata.percent - previousPercent) * 2);
         previousPercent = metadata.percent;
     })
         .then(function (content) {
@@ -1171,6 +1201,13 @@ function zipAndDownloadFiles(fileArray) {
 
             // Clean up the URL object
             URL.revokeObjectURL(link.href);
+
+            endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            console.log("File size : " + estimatedProjectSize / 1024 + "Kb.");
+            console.log("Time taken : " + timeTaken + "s.");
+
+            document.getElementById("time").innerHTML = "Time taken : " + timeTaken.toFixed(1) + "s.";
         });
 }
 
