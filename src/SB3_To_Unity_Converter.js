@@ -53,6 +53,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //don't write int, only floats in the code plss
 //clones don't spawn with the isClone flag set to true :O    -> Instantiate the GameObject in a parent for clones
 //touching so sloow ;(
+//replace empty inputs by null
 
 //Teamplate :
 //change penwidth en float
