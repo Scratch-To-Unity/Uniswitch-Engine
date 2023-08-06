@@ -13,6 +13,7 @@ let workspace =       [];
 let warp = false;
 let loopIdx = 0;
 let currentFunctionName;
+let projectName = "project";
 
 let progress = 0;
 let estimatedWork = 0;
@@ -72,11 +73,37 @@ async function convert() {
     estimatedWork += 1; //for the JSON.Parse()
     estimatedWork += 1; //for the zipping
     estimatedWork += 100; //for the zipping
-    /*getProjectData('60917032').then((data) => {
-        console.log(data);
-    }).catch((error) => {
-        console.error(error);
-    });*/
+
+    let fileInput = document.getElementById('fileInput').files[0];
+    let projectID = document.getElementById('URLInput').value;
+    if (projectID != "" && projectID.length > 5) {
+
+        //API from https://github.com/forkphorus/sb-downloader
+
+        const options = {
+            // May be called periodically with progress updates.
+            onProgress: (type, loaded, total) => {
+                // type is 'metadata', 'project', 'assets', or 'compress'
+                console.log(type, loaded / total);
+            }
+        };
+        const project = await SBDL.downloadProjectFromID(projectID, options);
+
+        const type = project.type;
+        // arrayBuffer is an ArrayBuffer of the compressed project data in the format given by type.
+        const arrayBuffer = project.arrayBuffer;
+
+        const title = project.title;
+
+        if (type != "sb3") {
+            throw new Error("Not a sb3 project. Consider converting this project into sb3.");
+        }
+
+        const projectBlob = new Blob([arrayBuffer]);
+        fileInput = projectBlob;
+        projectName = title;
+    }
+    console.log(fileInput);
 
     //Importing template
     try {
@@ -98,7 +125,7 @@ async function convert() {
             document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
             status("Extracting images...");
             //Get images, sounds, and project's JSON
-            await extractImagesFromZippedFile(document.getElementById('fileInput'), function (images) { //Action 3
+            await extractImagesFromZippedFile(fileInput, function (images) { //Action 3
                 scratchProject = JSON.parse(scratchProjectJSON); //Action 4
                 addProgress();
                 workspace = workspace.concat(images);
@@ -1068,9 +1095,9 @@ function padStringTo16(string) {
 function addProgress(value = 1) {
     progress += value;
     let percentage = progress / estimatedWork * 100;
-    console.warn("progress : " + progress);
-    console.warn("progress percentage : " + percentage + "%.");
-    console.warn("estimated work : " + estimatedWork + ".");
+    //console.warn("progress : " + progress);
+    //console.warn("progress percentage : " + percentage + "%.");
+    //console.warn("estimated work : " + estimatedWork + ".");
     document.getElementById("progressBar").style.width = percentage + '%';
 }
 
@@ -1200,7 +1227,7 @@ function toBinary(string) {
 async function extractImagesFromZippedFile(fileInput, callback) {
     var images = [];
 
-    var zipFile = fileInput.files[0];
+    var zipFile = fileInput/*.files[0]*/;
 
     var reader = new FileReader();
 
@@ -1437,34 +1464,6 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
 }
-
-//-------------------------------------------------------SCRATCH API---------------------------------------------------
-
-//code taken from turbowarp documentation
-const getProjectMetadata = async (projectId) => {
-    // IF IN A WEB BROWSER, you need to use a service like trampoline.turbowarp.org to access the Scratch API.
-    // IF IN NODE.JS, you should use https://api.scratch.mit.edu/projects/${projectId} directly instead.
-    const response = await fetch(`https://trampoline.turbowarp.org/api/projects/${projectId}`);
-    if (response.status === 404) {
-        throw new Error('The project is unshared or does not exist');
-    }
-    if (!response.ok) {
-        throw new Error(`HTTP error ${response.status} fetching project metadata`);
-    }
-    const json = await response.json();
-    return json;
-};
-
-const getProjectData = async (projectId) => {
-    const metadata = await getProjectMetadata(projectId);
-    const token = metadata.project_token;
-    const response = await fetch(`https://projects.scratch.mit.edu/${projectId}?token=${token}`);
-    if (!response.ok) {
-        throw new Error(`HTTP error ${response.status} fetching project data`);
-    }
-    const data = await response.arrayBuffer();
-    return data;
-};
 
 //----------------------------------------------------------SVG TO PNG--------------------------------------------------------
 

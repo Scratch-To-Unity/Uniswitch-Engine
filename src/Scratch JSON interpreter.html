@@ -6,12 +6,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turbowarp/sbdl@2.3.3/lib/bundle-standalone.min.js"></script>
 
     <div style="text-align: center; ">
         <br />
         <input type="file" accept="application/x.scratch.sb3" id="fileInput" style="padding: 10px;" />
         <br />
-        <button type="button" onclick="convert()" style="padding: 10px;">Start conversion</button>
+        <input style="padding: 10px;border-radius: 5px;" type="text" id="URLInput" placeholder="Enter a scratch project ID.">
+        <br />
+        <button type="button" onclick="convert()" style="padding: 10px;margin: 10px;">Start conversion</button>
         <br />
         <div id="status" style="padding: 10px;">Import file first</div>
         <br />
