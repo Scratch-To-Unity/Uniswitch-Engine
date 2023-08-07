@@ -59,14 +59,8 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 //TO DO:
 //next template : v14
-//the stage's renderer is causing scene errors sometimes                                                Whyy
 //if standardized name is null, replace it by a random name stored in a linked-list
-//create a function getKey that returns a boolean, and one that returns 0 or 1                          Bruh
-//Numéros dans les noms de variable                                                                     Doing
 //Add screen edge detection (relative to screen size) :/
-//don't write int, only floats in the code plss
-//clones don't spawn with the isClone flag set to true :O    -> Instantiate the GameObject in a parent for clones
-//touching so sloow ;(
 //replace empty inputs by null
 
 //Teamplate :
@@ -813,7 +807,7 @@ function addBlock(blockID) {
     l += blockRef.function;
 
 
-    //adding arguments and separators
+    //adding argument inputs and separators
     var entries = Object.entries(block.inputs);
     entries.forEach(([property, value], index) => {
         if (value[0] === 1) {
