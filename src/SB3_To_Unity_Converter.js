@@ -896,19 +896,24 @@ function addBlock(blockID) {
                     //we'll just check the first letter
                     //I hope that's alright
                     var inputValue = value[1][1];
-                    if (startsWithNumber(inputValue.toString())) {
-                        l += inputValue;
-                        if (containsDot(inputValue)) {
-                            l += "f";
-                        }
+                    if (inputValue == "") {
+                        status("Empty input found.");
+                        l += "null";
                     } else {
-                        if (property == "BROADCAST_INPUT") {
-                            l += '"Message' + standardizeName(value[1][1]) + '"';
+                        if (startsWithNumber(inputValue.toString())) {
+                            l += inputValue;
+                            if (containsDot(inputValue)) {
+                                l += "f";
+                            }
                         } else {
-                            if (inputValue == "") {
-                                l += "";
+                            if (property == "BROADCAST_INPUT") {
+                                l += '"Message' + standardizeName(value[1][1]) + '"';
                             } else {
-                                l += '"' + value[1][1] + '"';
+                                if (inputValue == "") {
+                                    l += "";
+                                } else {
+                                    l += '"' + value[1][1] + '"';
+                                }
                             }
                         }
                     }
