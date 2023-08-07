@@ -536,11 +536,15 @@ function addBlock(blockID) {
             l += proceduresDefinition;
         }
     }
-    if (block.opcode == "control_repeat" && block.inputs.SUBSTACK != undefined) {
+    if (block.opcode == "control_repeat") {
+        if (block.inputs.SUBSTACK != undefined || block.inputs.TIMES != "") {
+            l += addBlock(block.next);
+            return l;
+        }
         loopIdx++;
         var times = "TIMES" + loopIdx;
         var iteration = "ITERATION" + loopIdx;
-        l += "int " + times + " = Mathf.RoundToInt(";
+        l += "int " + times + " = Mathf.RoundToInt((float)";
         //yes, I'm re-writing the input system :/
         if (block.inputs.TIMES[0] == 1) {
             l += block.inputs.TIMES[1][1];
@@ -829,16 +833,25 @@ function addBlock(blockID) {
                 //we'll just check the first letter
                 //I hope that's alright
                 var inputValue = value[1][1];
-                if (startsWithNumber(inputValue.toString())) {
-                    l += value[1][1];
-                    if (containsDot(inputValue)) {
-                        l += "f";
-                    }
+                if (inputValue == "") {
+                    status("Empty input found.");
+                    l += "0f";
                 } else {
-                    if (property == "BROADCAST_INPUT") {
-                        l += '"Message' + standardizeName(value[1][1]) + '"';
+                    if (startsWithNumber(inputValue.toString())) {
+                        l += inputValue;
+                        if (containsDot(inputValue)) {
+                            l += "f";
+                        }
                     } else {
-                        l += '"' + value[1][1] + '"';
+                        if (property == "BROADCAST_INPUT") {
+                            l += '"Message' + standardizeName(value[1][1]) + '"';
+                        } else {
+                            if (inputValue == "") {
+                                l += "";
+                            } else {
+                                l += '"' + value[1][1] + '"';
+                            }
+                        }
                     }
                 }
                 /*if (typeof inputValue == "number") {
@@ -898,7 +911,7 @@ function addBlock(blockID) {
                     var inputValue = value[1][1];
                     if (inputValue == "") {
                         status("Empty input found.");
-                        l += "null";
+                        l += "0f";
                     } else {
                         if (startsWithNumber(inputValue.toString())) {
                             l += inputValue;
@@ -969,12 +982,18 @@ function addBlock(blockID) {
     });
 
     if (block.opcode == "control_repeat_until") {
-        l += addBlock(block.inputs.CONDITION[1]);
+        if (block.inputs.CONDITION != null) {
+            l += addBlock(block.inputs.CONDITION[1]);
+        }
         l += ") {";
-        l += addBlock(block.inputs.SUBSTACK[1]);
+        if (block.inputs.SUBSTACK != null) {
+            l += addBlock(block.inputs.SUBSTACK[1]);
+        }
     }
     if (block.opcode == "control_if_else") {
-        l += addBlock(block.inputs.CONDITION[1]);
+        if (block.inputs.CONDITION != null) {
+            l += addBlock(block.inputs.CONDITION[1]);
+        }
         l += ") {";
         if (block.inputs.SUBSTACK != null) {
             l += addBlock(block.inputs.SUBSTACK[1]);
@@ -985,7 +1004,9 @@ function addBlock(blockID) {
         }
     }
     if (block.opcode == "control_if") {
-        l += addBlock(block.inputs.CONDITION[1]);
+        if (block.inputs.CONDITION != null) {
+            l += addBlock(block.inputs.CONDITION[1]);
+        }
         l += ") {";
         if (block.inputs.SUBSTACK != null) {
             l += addBlock(block.inputs.SUBSTACK[1]);
