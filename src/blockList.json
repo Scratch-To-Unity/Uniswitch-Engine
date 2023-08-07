@@ -43,28 +43,28 @@
             "after": ""
         },
         "control_if": {
-            "function": "if (",
+            "function": "if ((bool)",
             "separator": "",
             "close": "}",
             "delay": false,
             "after": ""
         },
         "control_if_else": {
-            "function": "if (",
+            "function": "if ((bool)",
             "separator": "",
             "close": "}",
             "delay": false,
             "after": ""
         },
         "control_repeat": {
-            "function": "int TIMES = Mathf.Round(",
+            "function": "int TIMES = Mathf.Round(ERROR",
             "separator": ");for (int ITERATION = 0; ITERATION < TIMES; ITERATION++){",
             "close": "}",
             "delay": true,
             "after": ""
         },
         "control_repeat_until": {
-            "function": "while (!",
+            "function": "while (!(bool)",
             "separator": "",
             "close": "}",
             "delay": true,
@@ -540,7 +540,7 @@
             "after": ""
         },
         "pen_setPenColorToColor": {
-            "function": "penColor = HexToColor(",
+            "function": "penColor = HexToColor((string)",
             "separator": "",
             "close": ");",
             "delay": false,
