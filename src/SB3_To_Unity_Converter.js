@@ -35,7 +35,7 @@ const sb3Doc = document.getElementById('fileInput');
 //conversion parameter
 const playerUsername = "player";
 const maxListLenght = 1000;
-const useCommunityBlocks = false;
+const useCommunityBlocks = true;
 const customTranslations = [];
 const formatCode = true;
 
@@ -61,7 +61,6 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //next template : v14
 //if standardized name is null, replace it by a random name stored in a linked-list
 //Add screen edge detection (relative to screen size) :/
-//replace empty inputs by null
 
 //Teamplate :
 //change penwidth en float
@@ -372,12 +371,26 @@ function addScript(sprite) {
                 currentFunctionName = proceduresDefinition;
                 proceduresDefinition += "(";
                 var arguments = JSON.parse(blockList[prototypeID].mutation.argumentnames);
+                //processing value arguments
                 for (var arg = 0; arg < arguments.length; arg++) {
-                    proceduresDefinition += "object " + standardizeName(arguments[arg]);
-                    if (arg != arguments.length - 1) {
+                    let inputs = blockList[prototypeID].inputs
+                    let input = inputs[Object.keys(inputs)[arg]];
+                    let inputType = blockList[input[1]].opcode;
+                    if (inputType == "argument_reporter_string_number") {
+                        proceduresDefinition += "object " + standardizeName(arguments[arg]);
                         proceduresDefinition += ", ";
                     }
                 }
+                for (var arg = 0; arg < arguments.length; arg++) {
+                    let inputs = blockList[prototypeID].inputs
+                    let input = inputs[Object.keys(inputs)[arg]];
+                    let inputType = blockList[input[1]].opcode;
+                    if (inputType == "argument_reporter_boolean") {
+                        proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                        proceduresDefinition += ", ";
+                    }
+                }
+                proceduresDefinition = proceduresDefinition.slice(0, -2);
                 proceduresDefinition += ")";
 
                 code += proceduresDefinition;
@@ -525,16 +538,53 @@ function addBlock(blockID) {
 
     if (block.opcode == "procedures_call") {
         var proceduresDefinition = standardizeName(block.mutation.proccode.replace(/ %[sb]/g, ""));
-        if (block.mutation.warp == "true") {
-            l += "Function";
-            l += proceduresDefinition;
-        } else {
-            if (!warp) {
-                l += "yield return ";
+        if (useCommunityBlocks) {
+            //Community blocks
+            switch (proceduresDefinition) {
+                case "log":
+                    l += "Debug.Log(";
+                    break;
+                case "warn":
+                    l += "Debug.LogWarning(";
+                    break;
+                default:
+                    if (block.mutation.warp == "true") {
+                        l += "Function";
+                        l += proceduresDefinition;
+                    } else {
+                        if (!warp) {
+                            l += "yield return ";
+                        }
+                        l += "StartCoroutine(Function";
+                        l += proceduresDefinition;
+                    }
+                    break;
             }
-            l += "StartCoroutine(Function";
-            l += proceduresDefinition;
+        } else {
+            if (block.mutation.warp == "true") {
+                l += "Function";
+                l += proceduresDefinition;
+            } else {
+                if (!warp) {
+                    l += "yield return ";
+                }
+                l += "StartCoroutine(Function";
+                l += proceduresDefinition;
+            }
         }
+        
+        
+    }
+    if (block.opcode == "operator_not") {
+        l += "!((bool)";
+        if (Object.keys(block.inputs).length > 0) {
+            //it can only be a block (I guess??)
+            l += addBlock(block.inputs.OPERAND[1]);
+        } else {
+            l += "false";
+        }
+        l += ")";
+        return l;
     }
     if (block.opcode == "control_repeat") {
         if (block.inputs.SUBSTACK != undefined || block.inputs.TIMES != "") {
