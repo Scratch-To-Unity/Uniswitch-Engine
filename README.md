@@ -5,7 +5,7 @@
 
 
 # What it can do
-The converter actually supports 95 different blocks such as :
+The converter actually supports 99 different blocks such as :
  - motion blocks
  - scaling, rotation, hiding
  - layers
