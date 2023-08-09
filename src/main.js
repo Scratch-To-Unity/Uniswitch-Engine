@@ -66,7 +66,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //change penwidth en float
 //add penup and pendown
 
-
+console.log(test);
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
@@ -199,65 +199,65 @@ function status(string) {
 
 //----------------------------------------------------UNITY OBJECTS PART-----------------------------------------------
 
-function handleSprites(scratchProject) {
-    var sprites = scratchProject.targets;
-    estimatedWork += Object.keys(sprites).length;
-    sprites.forEach(sprite => handleSprite(sprite));
-}
+//function handleSprites(scratchProject) {
+//    var sprites = scratchProject.targets;
+//    estimatedWork += Object.keys(sprites).length;
+//    sprites.forEach(sprite => handleSprite(sprite));
+//}
 
-function handleSprite(sprite) {
-    addProgress();
-    console.log("Handling sprite : " + sprite.name)
-    //fileID : 21300000 for bitmap
-    //fileID : 3286163911610860551 for SVG
-    var fileID = "21300000";
-    if (sprite.costumes[sprite.currentCostume].dataFormat == "svg") {
-        fileID = "3286163911610860551";
-    }
-    addGameObject(sprite.name, stringToGUID(sprite.costumes[sprite.currentCostume].assetId), sprite.x, sprite.y, (sprite.visible * 1).toString(), stringToGUID(sprite.name + "Scr"), sprite.layerOrder, sprite.size, sprite.direction, fileID, sprite.costumes);
-    addScript(sprite);
-}
+//function handleSprite(sprite) {
+//    addProgress();
+//    console.log("Handling sprite : " + sprite.name)
+//    //fileID : 21300000 for bitmap
+//    //fileID : 3286163911610860551 for SVG
+//    var fileID = "21300000";
+//    if (sprite.costumes[sprite.currentCostume].dataFormat == "svg") {
+//        fileID = "3286163911610860551";
+//    }
+//    addGameObject(sprite.name, stringToGUID(sprite.costumes[sprite.currentCostume].assetId), sprite.x, sprite.y, (sprite.visible * 1).toString(), stringToGUID(sprite.name + "Scr"), sprite.layerOrder, sprite.size, sprite.direction, fileID, sprite.costumes);
+//    addScript(sprite);
+//}
 
-function addGameObject(spriteName, costumeGUID, px, py, isShown, scriptGUID, layerOrder, scale, direction, fileID, costumes) {
-    if (usedIdentifiers.includes(stringToNumber(spriteName))) {
-        status("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.")
-        throw new Error("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.");
-    }
-    var sortingLayer = "0";
-    console.log("Adding GameObject : " + spriteName)
-    if (spriteName == "Stage") {
-        px = 0;
-        py = 0;
-        isShown = "1";
-        sortingLayer = "-3";
-        scale = 100;
-        direction = 90;
+//function addGameObject(spriteName, costumeGUID, px, py, isShown, scriptGUID, layerOrder, scale, direction, fileID, costumes) {
+//    if (usedIdentifiers.includes(stringToNumber(spriteName))) {
+//        status("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.")
+//        throw new Error("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.");
+//    }
+//    var sortingLayer = "0";
+//    console.log("Adding GameObject : " + spriteName)
+//    if (spriteName == "Stage") {
+//        px = 0;
+//        py = 0;
+//        isShown = "1";
+//        sortingLayer = "-3";
+//        scale = 100;
+//        direction = 90;
         
-    }
+//    }
 
-    direction -= 90;
+//    direction -= 90;
 
-    //adding GameObject
-    unityGameScene += "\n--- !u!1 &" + stringToNumber(spriteName) + "\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: " + stringToNumber(spriteName + "Script") + "}\n  - component: {fileID: " + stringToNumber(spriteName + "SR") + "}\n  - component: {fileID: " + stringToNumber(spriteName + "Tr") + "}\n  m_Layer: 0\n  m_Name: " + spriteName + "\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1";
-    //adding Transform
-    unityGameScene += "\n--- !u!4 &" + stringToNumber(spriteName + "Tr") + "\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: { fileID: 0 }\n  m_PrefabInstance: { fileID: 0 }\n  m_PrefabAsset: { fileID: 0 }\n  m_GameObject: { fileID: " + stringToNumber(spriteName) + " }\n  m_LocalRotation: { x: 0, y: 0, z: " + direction + ", w: 1 }\n  m_LocalPosition: { x: " + px + ", y: " + py + ", z: 0 }\n  m_LocalScale: { x: " + scale + ", y: " + scale + ", z: " + scale + " }\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: { fileID: 0 }\n  m_RootOrder: 0\n  m_LocalEulerAnglesHint: { x: 0, y: 0, z: 0 }";
-    //adding SpriteRenderer
-    unityGameScene += "\n--- !u!212 &" + stringToNumber(spriteName + "SR") + "\nSpriteRenderer:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: " + stringToNumber(spriteName) + "}\n  m_Enabled: " + isShown + "\n  m_CastShadows: 0\n  m_ReceiveShadows: 0\n  m_DynamicOccludee: 1\n  m_StaticShadowCaster: 0\n  m_MotionVectors: 1\n  m_LightProbeUsage: 1\n  m_ReflectionProbeUsage: 1\n  m_RayTracingMode: 0\n  m_RayTraceProcedural: 0\n  m_RenderingLayerMask: 1\n  m_RendererPriority: 0\n  m_Materials:\n  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}\n  m_StaticBatchInfo:\n    firstSubMesh: 0\n    subMeshCount: 0\n  m_StaticBatchRoot: {fileID: 0}\n  m_ProbeAnchor: {fileID: 0}\n  m_LightProbeVolumeOverride: {fileID: 0}\n  m_ScaleInLightmap: 1\n  m_ReceiveGI: 1\n  m_PreserveUVs: 0\n  m_IgnoreNormalsForChartDetection: 0\n  m_ImportantGI: 0\n  m_StitchLightmapSeams: 1\n  m_SelectedEditorRenderState: 0\n  m_MinimumChartSize: 4\n  m_AutoUVMaxDistance: 0.5\n  m_AutoUVMaxAngle: 89\n  m_LightmapParameters: {fileID: 0}\n  m_SortingLayerID: 0\n  m_SortingLayer: " + sortingLayer + "\n  m_SortingOrder: " + layerOrder + "\n  m_Sprite: {fileID: " + fileID + ", guid: " + costumeGUID + ", type: 3}\n  m_Color: {r: 1, g: 1, b: 1, a: 1}\n  m_FlipX: 0\n  m_FlipY: 0\n  m_DrawMode: 0\n  m_Size: {x: 1.26, y: 1.5}\n  m_AdaptiveModeThreshold: 0.5\n  m_SpriteTileMode: 0\n  m_WasSpriteAssigned: 1\n  m_MaskInteraction: 0\n  m_SpriteSortPoint: 0";
-    //adding Script
-    unityGameScene += "\n--- !u!114 &" + stringToNumber(spriteName + "Script") + "\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: " + stringToNumber(spriteName) + "}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: " + scriptGUID + ", type: 3}\n  m_Name: \n  m_EditorClassIdentifier:\n";
-    //adding costume list
-    unityGameScene += "  costumes:";
-    costumes.forEach((costume, index) => {
-        unityGameScene += "\n  - name: " + costume.name;
-        var fileID = "21300000";
-        if (costume.dataFormat == "svg") {
-            fileID = "3286163911610860551";
-        }
-        unityGameScene += "\n    sprite: {fileID: " + fileID + ", guid: " + stringToGUID(costume.assetId) + ", type: 3}";
-        unityGameScene += "\n    index: " + index;
-    });
-    usedIdentifiers.push(stringToNumber(spriteName));
-}
+//    //adding GameObject
+//    unityGameScene += "\n--- !u!1 &" + stringToNumber(spriteName) + "\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: " + stringToNumber(spriteName + "Script") + "}\n  - component: {fileID: " + stringToNumber(spriteName + "SR") + "}\n  - component: {fileID: " + stringToNumber(spriteName + "Tr") + "}\n  m_Layer: 0\n  m_Name: " + spriteName + "\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1";
+//    //adding Transform
+//    unityGameScene += "\n--- !u!4 &" + stringToNumber(spriteName + "Tr") + "\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: { fileID: 0 }\n  m_PrefabInstance: { fileID: 0 }\n  m_PrefabAsset: { fileID: 0 }\n  m_GameObject: { fileID: " + stringToNumber(spriteName) + " }\n  m_LocalRotation: { x: 0, y: 0, z: " + direction + ", w: 1 }\n  m_LocalPosition: { x: " + px + ", y: " + py + ", z: 0 }\n  m_LocalScale: { x: " + scale + ", y: " + scale + ", z: " + scale + " }\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: { fileID: 0 }\n  m_RootOrder: 0\n  m_LocalEulerAnglesHint: { x: 0, y: 0, z: 0 }";
+//    //adding SpriteRenderer
+//    unityGameScene += "\n--- !u!212 &" + stringToNumber(spriteName + "SR") + "\nSpriteRenderer:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: " + stringToNumber(spriteName) + "}\n  m_Enabled: " + isShown + "\n  m_CastShadows: 0\n  m_ReceiveShadows: 0\n  m_DynamicOccludee: 1\n  m_StaticShadowCaster: 0\n  m_MotionVectors: 1\n  m_LightProbeUsage: 1\n  m_ReflectionProbeUsage: 1\n  m_RayTracingMode: 0\n  m_RayTraceProcedural: 0\n  m_RenderingLayerMask: 1\n  m_RendererPriority: 0\n  m_Materials:\n  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}\n  m_StaticBatchInfo:\n    firstSubMesh: 0\n    subMeshCount: 0\n  m_StaticBatchRoot: {fileID: 0}\n  m_ProbeAnchor: {fileID: 0}\n  m_LightProbeVolumeOverride: {fileID: 0}\n  m_ScaleInLightmap: 1\n  m_ReceiveGI: 1\n  m_PreserveUVs: 0\n  m_IgnoreNormalsForChartDetection: 0\n  m_ImportantGI: 0\n  m_StitchLightmapSeams: 1\n  m_SelectedEditorRenderState: 0\n  m_MinimumChartSize: 4\n  m_AutoUVMaxDistance: 0.5\n  m_AutoUVMaxAngle: 89\n  m_LightmapParameters: {fileID: 0}\n  m_SortingLayerID: 0\n  m_SortingLayer: " + sortingLayer + "\n  m_SortingOrder: " + layerOrder + "\n  m_Sprite: {fileID: " + fileID + ", guid: " + costumeGUID + ", type: 3}\n  m_Color: {r: 1, g: 1, b: 1, a: 1}\n  m_FlipX: 0\n  m_FlipY: 0\n  m_DrawMode: 0\n  m_Size: {x: 1.26, y: 1.5}\n  m_AdaptiveModeThreshold: 0.5\n  m_SpriteTileMode: 0\n  m_WasSpriteAssigned: 1\n  m_MaskInteraction: 0\n  m_SpriteSortPoint: 0";
+//    //adding Script
+//    unityGameScene += "\n--- !u!114 &" + stringToNumber(spriteName + "Script") + "\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: " + stringToNumber(spriteName) + "}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: " + scriptGUID + ", type: 3}\n  m_Name: \n  m_EditorClassIdentifier:\n";
+//    //adding costume list
+//    unityGameScene += "  costumes:";
+//    costumes.forEach((costume, index) => {
+//        unityGameScene += "\n  - name: " + costume.name;
+//        var fileID = "21300000";
+//        if (costume.dataFormat == "svg") {
+//            fileID = "3286163911610860551";
+//        }
+//        unityGameScene += "\n    sprite: {fileID: " + fileID + ", guid: " + stringToGUID(costume.assetId) + ", type: 3}";
+//        unityGameScene += "\n    index: " + index;
+//    });
+//    usedIdentifiers.push(stringToNumber(spriteName));
+//}
 
 //----------------------------------------------------SCRIPTING PART-----------------------------------------------
 
@@ -1377,497 +1377,497 @@ function addProgress(value = 1) {
 
 //----------------------------------------------------FILE HANDLING PART-----------------------------------------------
 
-function getFileExtension(filename) {
-    return filename.split('.').pop();
-}
+//function getFileExtension(filename) {
+//    return filename.split('.').pop();
+//}
 
-function arrayBufferToString(arrayBuffer) {
-    const decoder = new TextDecoder('utf-8');
-    return decoder.decode(arrayBuffer);
-}
+//function arrayBufferToString(arrayBuffer) {
+//    const decoder = new TextDecoder('utf-8');
+//    return decoder.decode(arrayBuffer);
+//}
 
-function stringToArrayBuffer(string) {
-    const encoder = new TextEncoder();
-    return encoder.encode(string).buffer;
-}
+//function stringToArrayBuffer(string) {
+//    const encoder = new TextEncoder();
+//    return encoder.encode(string).buffer;
+//}
 
-function blobToArrayBuffer(blob) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+//function blobToArrayBuffer(blob) {
+//    return new Promise((resolve, reject) => {
+//        const reader = new FileReader();
 
-        reader.onload = () => {
-            resolve(reader.result);
-        };
+//        reader.onload = () => {
+//            resolve(reader.result);
+//        };
 
-        reader.onerror = () => {
-            reject(new Error('Error reading the Blob as ArrayBuffer'));
-        };
+//        reader.onerror = () => {
+//            reject(new Error('Error reading the Blob as ArrayBuffer'));
+//        };
 
-        reader.readAsArrayBuffer(blob);
-    });
-}
+//        reader.readAsArrayBuffer(blob);
+//    });
+//}
 
-function getFileNameWithoutExtension(filename) {
-    const parts = filename.split(".");
-    if (parts.length > 1) {
-        parts.pop(); // Remove the last part (extension)
-    }
-    return parts.join(".");
-}
+//function getFileNameWithoutExtension(filename) {
+//    const parts = filename.split(".");
+//    if (parts.length > 1) {
+//        parts.pop(); // Remove the last part (extension)
+//    }
+//    return parts.join(".");
+//}
 
-function zipAndDownloadFiles(fileArray) {
-    // Create a new instance of JSZip
-    var zip = new JSZip();
+//function zipAndDownloadFiles(fileArray) {
+//    // Create a new instance of JSZip
+//    var zip = new JSZip();
 
-    // Iterate over the fileArray
-    fileArray.forEach(function (file) {
-        // Add each file to the zip
-        zip.file(file.name, file.data);
-        addProgress();
-    });
-    let previousPercent = 0;
-    // Generate the zip file asynchronously
-    zip.generateAsync({ type: 'blob' }, function updateCallback(metadata) {
-        //progress = metadata.percent / 100 * estimatedWork;
-        addProgress((metadata.percent - previousPercent) * 2);
-        previousPercent = metadata.percent;
-    })
-        .then(function (content) {
-            addProgress();
-            // Create a download link element
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = 'converted project.zip';
+//    // Iterate over the fileArray
+//    fileArray.forEach(function (file) {
+//        // Add each file to the zip
+//        zip.file(file.name, file.data);
+//        addProgress();
+//    });
+//    let previousPercent = 0;
+//    // Generate the zip file asynchronously
+//    zip.generateAsync({ type: 'blob' }, function updateCallback(metadata) {
+//        //progress = metadata.percent / 100 * estimatedWork;
+//        addProgress((metadata.percent - previousPercent) * 2);
+//        previousPercent = metadata.percent;
+//    })
+//        .then(function (content) {
+//            addProgress();
+//            // Create a download link element
+//            var link = document.createElement('a');
+//            link.href = URL.createObjectURL(content);
+//            link.download = 'converted project.zip';
 
-            // Simulate a click event to trigger the download
-            link.click();
+//            // Simulate a click event to trigger the download
+//            link.click();
 
-            // Clean up the URL object
-            URL.revokeObjectURL(link.href);
+//            // Clean up the URL object
+//            URL.revokeObjectURL(link.href);
 
-            endTime = performance.now();
-            const timeTaken = (endTime - startTime) / 1000;
-            console.log("File size : " + estimatedProjectSize / 1024 + "Kb.");
-            console.log("Time taken : " + timeTaken + "s.");
+//            endTime = performance.now();
+//            const timeTaken = (endTime - startTime) / 1000;
+//            console.log("File size : " + estimatedProjectSize / 1024 + "Kb.");
+//            console.log("Time taken : " + timeTaken + "s.");
 
-            document.getElementById("time").innerHTML = "Time taken : " + timeTaken.toFixed(1) + "s.";
-        });
-}
+//            document.getElementById("time").innerHTML = "Time taken : " + timeTaken.toFixed(1) + "s.";
+//        });
+//}
 
-function unzipFromURL(url) {
-    return new Promise(function (resolve, reject) {
-        fetch(url)
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch the zip file');
-                }
-                return response.blob();
-            })
-            .then(function (blob) {
-                var zip = new JSZip();
-                return zip.loadAsync(blob);
-            })
-            .then(function (zip) {
-                var fileArray = [];
-                var fileCount = Object.keys(zip.files).length;
-                var processedCount = 0;
+//function unzipFromURL(url) {
+//    return new Promise(function (resolve, reject) {
+//        fetch(url)
+//            .then(function (response) {
+//                if (!response.ok) {
+//                    throw new Error('Failed to fetch the zip file');
+//                }
+//                return response.blob();
+//            })
+//            .then(function (blob) {
+//                var zip = new JSZip();
+//                return zip.loadAsync(blob);
+//            })
+//            .then(function (zip) {
+//                var fileArray = [];
+//                var fileCount = Object.keys(zip.files).length;
+//                var processedCount = 0;
 
-                estimatedWork += fileCount; //number of template files
+//                estimatedWork += fileCount; //number of template files
 
-                Object.keys(zip.files).forEach(function (filename) {
-                    addProgress();
-                    zip.files[filename].async('arraybuffer')
-                        .then(function (data) {
-                            var file = {
-                                name: filename,
-                                data: data
-                            };
-                            fileArray.push(file);
-                            processedCount++;
+//                Object.keys(zip.files).forEach(function (filename) {
+//                    addProgress();
+//                    zip.files[filename].async('arraybuffer')
+//                        .then(function (data) {
+//                            var file = {
+//                                name: filename,
+//                                data: data
+//                            };
+//                            fileArray.push(file);
+//                            processedCount++;
 
-                            if (processedCount === fileCount) {
-                                resolve(fileArray);
-                            }
-                        });
-                });
-            })
-            .catch(function (error) {
-                reject(error);
-            });
-    });
-}
+//                            if (processedCount === fileCount) {
+//                                resolve(fileArray);
+//                            }
+//                        });
+//                });
+//            })
+//            .catch(function (error) {
+//                reject(error);
+//            });
+//    });
+//}
 
-function toBinary(string) {
-    const codeUnits = new Uint16Array(string.length);
-    for (let i = 0; i < codeUnits.length; i++) {
-        codeUnits[i] = string.charCodeAt(i);
-    }
-    return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
-}
+//function toBinary(string) {
+//    const codeUnits = new Uint16Array(string.length);
+//    for (let i = 0; i < codeUnits.length; i++) {
+//        codeUnits[i] = string.charCodeAt(i);
+//    }
+//    return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+//}
 
-async function extractImagesFromZippedFile(fileInput, callback) {
-    var images = [];
+//async function extractImagesFromZippedFile(fileInput, callback) {
+//    var images = [];
 
-    var zipFile = fileInput/*.files[0]*/;
+//    var zipFile = fileInput/*.files[0]*/;
 
-    var reader = new FileReader();
+//    var reader = new FileReader();
 
-    reader.onload = async function (e) {
-        var zipData = e.target.result;
+//    reader.onload = async function (e) {
+//        var zipData = e.target.result;
 
-        JSZip.loadAsync(zipData)
-            .then(async function (zip) {
-                var imagePromises = [];
-                estimatedWork += Object.keys(zip.files).length;
-                console.log(zip);
-                zip.forEach(async function (relativePath, file) {
-                    addProgress();
-                    if (file.dir) {
-                        return; // Ignore directories
-                    }
+//        JSZip.loadAsync(zipData)
+//            .then(async function (zip) {
+//                var imagePromises = [];
+//                estimatedWork += Object.keys(zip.files).length;
+//                console.log(zip);
+//                zip.forEach(async function (relativePath, file) {
+//                    addProgress();
+//                    if (file.dir) {
+//                        return; // Ignore directories
+//                    }
 
-                    // Check if the file is an image
-                    if (/\.(jpe?g|png|gif)$/i.test(relativePath)) {
-                        imagePromises.push(
-                            file.async('base64').then(function (base64) {
-                                var image = {
-                                    name: "Template Scratch/Assets/Costumes/" + relativePath,
-                                    data: b64toBlob(base64),
-                                };
-                                images.push(image);
-                                if (getFileExtension(relativePath) == "svg") {
-                                    //SVG meta
-                                    var imageMeta = {
-                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
-                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
-                                    };
-                                } else {
-                                    //PNG meta
-                                    var imageMeta = {
-                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
-                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nTextureImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 12\n  mipmaps:\n    mipMapMode: 0\n    enableMipMap: 0\n    sRGBTexture: 1\n    linearTexture: 0\n    fadeOut: 0\n    borderMipMap: 0\n    mipMapsPreserveCoverage: 0\n    alphaTestReferenceValue: 0.5\n    mipMapFadeDistanceStart: 1\n    mipMapFadeDistanceEnd: 3\n  bumpmap:\n    convertToNormalMap: 0\n    externalNormalMap: 0\n    heightScale: 0.25\n    normalMapFilter: 0\n    flipGreenChannel: 0\n  isReadable: 0\n  streamingMipmaps: 0\n  streamingMipmapsPriority: 0\n  vTOnly: 0\n  ignoreMipmapLimit: 0\n  grayScaleToAlpha: 0\n  generateCubemap: 6\n  cubemapConvolution: 0\n  seamlessCubemap: 0\n  textureFormat: 1\n  maxTextureSize: 2048\n  textureSettings:\n    serializedVersion: 2\n    filterMode: 1\n    aniso: 1\n    mipBias: 0\n    wrapU: 1\n    wrapV: 1\n    wrapW: 1\n  nPOTScale: 0\n  lightmap: 0\n  compressionQuality: 50\n  spriteMode: 1\n  spriteExtrude: 1\n  spriteMeshType: 1\n  alignment: 0\n  spritePivot: {x: 0.5, y: 0.5}\n  spritePixelsToUnits: 200\n  spriteBorder: {x: 0, y: 0, z: 0, w: 0}\n  spriteGenerateFallbackPhysicsShape: 1\n  alphaUsage: 1\n  alphaIsTransparency: 1\n  spriteTessellationDetail: -1\n  textureType: 8\n  textureShape: 1\n  singleChannelComponent: 0\n  flipbookRows: 1\n  flipbookColumns: 1\n  maxTextureSizeSet: 0\n  compressionQualitySet: 0\n  textureFormatSet: 0\n  ignorePngGamma: 0\n  applyGammaDecoding: 0\n  swizzle: 50462976\n  cookieLightType: 0\n  platformSettings:\n  - serializedVersion: 3\n    buildTarget: DefaultTexturePlatform\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Standalone\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Server\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Android\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: WebGL\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  spriteSheet:\n    serializedVersion: 2\n    sprites: []\n    outline: []\n    physicsShape: []\n    bones: []\n    spriteID: 5e97eb03825dee720800000000000000\n    internalID: 0\n    vertices: []\n    indices: \n    edges: []\n    weights: []\n    secondaryTextures: []\n    nameFileIdTable: {}\n  mipmapLimitGroupName: \n  pSDRemoveMatte: 0\n  userData: \n  assetBundleName: \n  assetBundleVariant:\n"),
-                                    };
-                                }
+//                    // Check if the file is an image
+//                    if (/\.(jpe?g|png|gif)$/i.test(relativePath)) {
+//                        imagePromises.push(
+//                            file.async('base64').then(function (base64) {
+//                                var image = {
+//                                    name: "Template Scratch/Assets/Costumes/" + relativePath,
+//                                    data: b64toBlob(base64),
+//                                };
+//                                images.push(image);
+//                                if (getFileExtension(relativePath) == "svg") {
+//                                    //SVG meta
+//                                    var imageMeta = {
+//                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
+//                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
+//                                    };
+//                                } else {
+//                                    //PNG meta
+//                                    var imageMeta = {
+//                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
+//                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nTextureImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 12\n  mipmaps:\n    mipMapMode: 0\n    enableMipMap: 0\n    sRGBTexture: 1\n    linearTexture: 0\n    fadeOut: 0\n    borderMipMap: 0\n    mipMapsPreserveCoverage: 0\n    alphaTestReferenceValue: 0.5\n    mipMapFadeDistanceStart: 1\n    mipMapFadeDistanceEnd: 3\n  bumpmap:\n    convertToNormalMap: 0\n    externalNormalMap: 0\n    heightScale: 0.25\n    normalMapFilter: 0\n    flipGreenChannel: 0\n  isReadable: 0\n  streamingMipmaps: 0\n  streamingMipmapsPriority: 0\n  vTOnly: 0\n  ignoreMipmapLimit: 0\n  grayScaleToAlpha: 0\n  generateCubemap: 6\n  cubemapConvolution: 0\n  seamlessCubemap: 0\n  textureFormat: 1\n  maxTextureSize: 2048\n  textureSettings:\n    serializedVersion: 2\n    filterMode: 1\n    aniso: 1\n    mipBias: 0\n    wrapU: 1\n    wrapV: 1\n    wrapW: 1\n  nPOTScale: 0\n  lightmap: 0\n  compressionQuality: 50\n  spriteMode: 1\n  spriteExtrude: 1\n  spriteMeshType: 1\n  alignment: 0\n  spritePivot: {x: 0.5, y: 0.5}\n  spritePixelsToUnits: 200\n  spriteBorder: {x: 0, y: 0, z: 0, w: 0}\n  spriteGenerateFallbackPhysicsShape: 1\n  alphaUsage: 1\n  alphaIsTransparency: 1\n  spriteTessellationDetail: -1\n  textureType: 8\n  textureShape: 1\n  singleChannelComponent: 0\n  flipbookRows: 1\n  flipbookColumns: 1\n  maxTextureSizeSet: 0\n  compressionQualitySet: 0\n  textureFormatSet: 0\n  ignorePngGamma: 0\n  applyGammaDecoding: 0\n  swizzle: 50462976\n  cookieLightType: 0\n  platformSettings:\n  - serializedVersion: 3\n    buildTarget: DefaultTexturePlatform\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Standalone\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Server\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Android\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: WebGL\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  spriteSheet:\n    serializedVersion: 2\n    sprites: []\n    outline: []\n    physicsShape: []\n    bones: []\n    spriteID: 5e97eb03825dee720800000000000000\n    internalID: 0\n    vertices: []\n    indices: \n    edges: []\n    weights: []\n    secondaryTextures: []\n    nameFileIdTable: {}\n  mipmapLimitGroupName: \n  pSDRemoveMatte: 0\n  userData: \n  assetBundleName: \n  assetBundleVariant:\n"),
+//                                    };
+//                                }
                                 
-                                images.push(imageMeta);
-                            })
-                        );
-                    } else {
-                        if (getFileExtension(relativePath) == "json") {
-                            imagePromises.push(
-                                file.async('text').then(function (jsonData) {
-                                    scratchProjectJSON = jsonData;
-                                })
-                            );
-                        }
-                        if (getFileExtension(relativePath) == "svg") {
-                            imagePromises.push(
-                                file.async('text').then(function (svgData) {
-                                    var image = {
-                                        name: "Template Scratch/Assets/Costumes/" + relativePath,
-                                        data: stringToArrayBuffer(svgData),
-                                    };
-                                    images.push(image);
-                                    //SVG meta
-                                    var imageMeta = {
-                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
-                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
-                                    };
-                                    images.push(imageMeta);
-                                    /*imagePromises.push(
-                                        convertSvgToPngV2(svgData, (error, pngBlob) => {
-                                            if (error) {
-                                                console.error('Error converting SVG to PNG:', error);
-                                                //reject(error);
-                                            } else {
-                                                //pngBlob.type = "";
-                                                console.log("png blob : " + pngBlob);
-                                                //image.data = pngBlob;
-                                                //fileData = pngBlob;
-                                                //resolve(pngBlob);
-                                                return pngBlob;
-                                            }
-                                        })
-                                    );*/
-                                })
-                                /*.then(function (fileData) {
-                                    console.log("file data : " + fileData);
-                                    var image = {
-                                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
-                                        data: fileData,
-                                    };
-                                    console.log("image data : " + image.data);
-                                    images.push(image);
-                                    //PNG meta
-                                    var imageMeta = {
-                                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png" + ".meta",
-                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nTextureImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 12\n  mipmaps:\n    mipMapMode: 0\n    enableMipMap: 0\n    sRGBTexture: 1\n    linearTexture: 0\n    fadeOut: 0\n    borderMipMap: 0\n    mipMapsPreserveCoverage: 0\n    alphaTestReferenceValue: 0.5\n    mipMapFadeDistanceStart: 1\n    mipMapFadeDistanceEnd: 3\n  bumpmap:\n    convertToNormalMap: 0\n    externalNormalMap: 0\n    heightScale: 0.25\n    normalMapFilter: 0\n    flipGreenChannel: 0\n  isReadable: 0\n  streamingMipmaps: 0\n  streamingMipmapsPriority: 0\n  vTOnly: 0\n  ignoreMipmapLimit: 0\n  grayScaleToAlpha: 0\n  generateCubemap: 6\n  cubemapConvolution: 0\n  seamlessCubemap: 0\n  textureFormat: 1\n  maxTextureSize: 2048\n  textureSettings:\n    serializedVersion: 2\n    filterMode: 1\n    aniso: 1\n    mipBias: 0\n    wrapU: 1\n    wrapV: 1\n    wrapW: 1\n  nPOTScale: 0\n  lightmap: 0\n  compressionQuality: 50\n  spriteMode: 1\n  spriteExtrude: 1\n  spriteMeshType: 1\n  alignment: 0\n  spritePivot: {x: 0.5, y: 0.5}\n  spritePixelsToUnits: 200\n  spriteBorder: {x: 0, y: 0, z: 0, w: 0}\n  spriteGenerateFallbackPhysicsShape: 1\n  alphaUsage: 1\n  alphaIsTransparency: 1\n  spriteTessellationDetail: -1\n  textureType: 8\n  textureShape: 1\n  singleChannelComponent: 0\n  flipbookRows: 1\n  flipbookColumns: 1\n  maxTextureSizeSet: 0\n  compressionQualitySet: 0\n  textureFormatSet: 0\n  ignorePngGamma: 0\n  applyGammaDecoding: 0\n  swizzle: 50462976\n  cookieLightType: 0\n  platformSettings:\n  - serializedVersion: 3\n    buildTarget: DefaultTexturePlatform\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Standalone\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Server\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Android\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: WebGL\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  spriteSheet:\n    serializedVersion: 2\n    sprites: []\n    outline: []\n    physicsShape: []\n    bones: []\n    spriteID: 5e97eb03825dee720800000000000000\n    internalID: 0\n    vertices: []\n    indices: \n    edges: []\n    weights: []\n    secondaryTextures: []\n    nameFileIdTable: {}\n  mipmapLimitGroupName: \n  pSDRemoveMatte: 0\n  userData: \n  assetBundleName: \n  assetBundleVariant:\n"),
-                                    };
-                                    /*
-                                    //SVG meta
-                                    var imageMeta = {
-                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
-                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
-                                    };
-                                    images.push(imageMeta);
-                                })*/
-                            );
-                        }
-                    }
-                });
+//                                images.push(imageMeta);
+//                            })
+//                        );
+//                    } else {
+//                        if (getFileExtension(relativePath) == "json") {
+//                            imagePromises.push(
+//                                file.async('text').then(function (jsonData) {
+//                                    scratchProjectJSON = jsonData;
+//                                })
+//                            );
+//                        }
+//                        if (getFileExtension(relativePath) == "svg") {
+//                            imagePromises.push(
+//                                file.async('text').then(function (svgData) {
+//                                    var image = {
+//                                        name: "Template Scratch/Assets/Costumes/" + relativePath,
+//                                        data: stringToArrayBuffer(svgData),
+//                                    };
+//                                    images.push(image);
+//                                    //SVG meta
+//                                    var imageMeta = {
+//                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
+//                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
+//                                    };
+//                                    images.push(imageMeta);
+//                                    /*imagePromises.push(
+//                                        convertSvgToPngV2(svgData, (error, pngBlob) => {
+//                                            if (error) {
+//                                                console.error('Error converting SVG to PNG:', error);
+//                                                //reject(error);
+//                                            } else {
+//                                                //pngBlob.type = "";
+//                                                console.log("png blob : " + pngBlob);
+//                                                //image.data = pngBlob;
+//                                                //fileData = pngBlob;
+//                                                //resolve(pngBlob);
+//                                                return pngBlob;
+//                                            }
+//                                        })
+//                                    );*/
+//                                })
+//                                /*.then(function (fileData) {
+//                                    console.log("file data : " + fileData);
+//                                    var image = {
+//                                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
+//                                        data: fileData,
+//                                    };
+//                                    console.log("image data : " + image.data);
+//                                    images.push(image);
+//                                    //PNG meta
+//                                    var imageMeta = {
+//                                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png" + ".meta",
+//                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nTextureImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 12\n  mipmaps:\n    mipMapMode: 0\n    enableMipMap: 0\n    sRGBTexture: 1\n    linearTexture: 0\n    fadeOut: 0\n    borderMipMap: 0\n    mipMapsPreserveCoverage: 0\n    alphaTestReferenceValue: 0.5\n    mipMapFadeDistanceStart: 1\n    mipMapFadeDistanceEnd: 3\n  bumpmap:\n    convertToNormalMap: 0\n    externalNormalMap: 0\n    heightScale: 0.25\n    normalMapFilter: 0\n    flipGreenChannel: 0\n  isReadable: 0\n  streamingMipmaps: 0\n  streamingMipmapsPriority: 0\n  vTOnly: 0\n  ignoreMipmapLimit: 0\n  grayScaleToAlpha: 0\n  generateCubemap: 6\n  cubemapConvolution: 0\n  seamlessCubemap: 0\n  textureFormat: 1\n  maxTextureSize: 2048\n  textureSettings:\n    serializedVersion: 2\n    filterMode: 1\n    aniso: 1\n    mipBias: 0\n    wrapU: 1\n    wrapV: 1\n    wrapW: 1\n  nPOTScale: 0\n  lightmap: 0\n  compressionQuality: 50\n  spriteMode: 1\n  spriteExtrude: 1\n  spriteMeshType: 1\n  alignment: 0\n  spritePivot: {x: 0.5, y: 0.5}\n  spritePixelsToUnits: 200\n  spriteBorder: {x: 0, y: 0, z: 0, w: 0}\n  spriteGenerateFallbackPhysicsShape: 1\n  alphaUsage: 1\n  alphaIsTransparency: 1\n  spriteTessellationDetail: -1\n  textureType: 8\n  textureShape: 1\n  singleChannelComponent: 0\n  flipbookRows: 1\n  flipbookColumns: 1\n  maxTextureSizeSet: 0\n  compressionQualitySet: 0\n  textureFormatSet: 0\n  ignorePngGamma: 0\n  applyGammaDecoding: 0\n  swizzle: 50462976\n  cookieLightType: 0\n  platformSettings:\n  - serializedVersion: 3\n    buildTarget: DefaultTexturePlatform\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Standalone\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Server\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: Android\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  - serializedVersion: 3\n    buildTarget: WebGL\n    maxTextureSize: 2048\n    resizeAlgorithm: 0\n    textureFormat: -1\n    textureCompression: 1\n    compressionQuality: 50\n    crunchedCompression: 0\n    allowsAlphaSplitting: 0\n    overridden: 0\n    androidETC2FallbackOverride: 0\n    forceMaximumCompressionQuality_BC6H_BC7: 0\n  spriteSheet:\n    serializedVersion: 2\n    sprites: []\n    outline: []\n    physicsShape: []\n    bones: []\n    spriteID: 5e97eb03825dee720800000000000000\n    internalID: 0\n    vertices: []\n    indices: \n    edges: []\n    weights: []\n    secondaryTextures: []\n    nameFileIdTable: {}\n  mipmapLimitGroupName: \n  pSDRemoveMatte: 0\n  userData: \n  assetBundleName: \n  assetBundleVariant:\n"),
+//                                    };
+//                                    /*
+//                                    //SVG meta
+//                                    var imageMeta = {
+//                                        name: "Template Scratch/Assets/Costumes/" + relativePath + ".meta",
+//                                        data: stringToArrayBuffer("fileFormatVersion: 2\nguid: " + stringToGUID(getFileNameWithoutExtension(relativePath)) + "\nScriptedImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n  serializedVersion: 2\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}\n  svgType: 1\n  texturedSpriteMeshType: 0\n  svgPixelsPerUnit: 100\n  gradientResolution: 64\n  alignment: 0\n  customPivot: {x: 0, y: 0}\n  generatePhysicsShape: 0\n  viewportOptions: 0\n  preserveViewport: 0\n  advancedMode: 0\n  predefinedResolutionIndex: 2\n  targetResolution: 720\n  resolutionMultiplier: 2\n  stepDistance: 10\n  samplingStepDistance: 100\n  maxCordDeviationEnabled: 0\n  maxCordDeviation: 1\n  maxTangentAngleEnabled: 0\n  maxTangentAngle: 5\n  keepTextureAspectRatio: 1\n  textureSize: 1024\n  textureWidth: 256\n  textureHeight: 256\n  wrapMode: 0\n  filterMode: 1\n  sampleCount: 2\n  preserveSVGImageAspect: 0\n  useSVGPixelsPerUnit: 1\n  spriteData:\n    TessellationDetail: 0\n    SpriteRect:\n      name: bcf454acf82e4504149f7ffe07081dbc\n      originalName: \n      pivot: {x: 5.1263156, y: 5.12}\n      alignment: 0\n      border: {x: 0, y: 0, z: 0, w: 0}\n      rect:\n        serializedVersion: 2\n        x: 0\n        y: 0\n        width: 95\n        height: 100\n      spriteID: d058db1872292fa4489e7f183a13187e\n    PhysicsOutlines: []\n"),
+//                                    };
+//                                    images.push(imageMeta);
+//                                })*/
+//                            );
+//                        }
+//                    }
+//                });
 
-                Promise.all(imagePromises).then(function () {
-                    callback(images);
-                });
-            })
-            .catch(function (error) {
-                console.error('Error extracting images from zip:', error);
-            });
-    };
+//                Promise.all(imagePromises).then(function () {
+//                    callback(images);
+//                });
+//            })
+//            .catch(function (error) {
+//                console.error('Error extracting images from zip:', error);
+//            });
+//    };
 
-    reader.readAsArrayBuffer(zipFile);
-}
+//    reader.readAsArrayBuffer(zipFile);
+//}
 
-async function extractImagesFromZippedFileV2(fileInput, callback) {
-    var images = [];
+//async function extractImagesFromZippedFileV2(fileInput, callback) {
+//    var images = [];
 
-    var zipFile = fileInput.files[0];
+//    var zipFile = fileInput.files[0];
 
-    var reader = new FileReader();
+//    var reader = new FileReader();
 
-    reader.onload = async function (e) {
-        var zipData = e.target.result;
+//    reader.onload = async function (e) {
+//        var zipData = e.target.result;
 
-        try {
-            var zip = await JSZip.loadAsync(zipData);
+//        try {
+//            var zip = await JSZip.loadAsync(zipData);
 
-            var imagePromises = [];
+//            var imagePromises = [];
 
-            zip.forEach(async function (relativePath, file) {
-                // ... (rest of the code remains unchanged)
-                if (getFileExtension(relativePath) == "json") {
-                    await file.async('text').then(function (jsonData) {
-                        scratchProjectJSON = jsonData;
-                    })
-                }
-                if (getFileExtension(relativePath) == "svg") {
-                    var svgData = await file.async('text');
-                    var pngData = imagePromises.push( await convertSvgToPngV3(svgData));
-                    /*var image = {
-                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
-                        data: pngData,
-                    };
-                    console.warn("hey wtf");
-                    images.push(image);*/
-                    //console.warn("svg data : " + svgData);
-                    /*try {
-                        var pngBlob = await convertSvgToPngV2(svgData);
-                        console.warn("png blob : " + pngBlob);
-                        var image = {
-                            name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
-                            data: pngBlob,
-                        };
-                        images.push(image);
-
-
-                        // ... (rest of the code remains unchanged)
-                    } catch (error) {
-                        console.error('Error converting SVG to PNG:', error);
-                    }*/
-                    /*var pngBlobPromise = new Promise((resolve, reject) => {
-                        convertSvgToPngV2(svgData, (error, pngBlob) => {
-                            if (error) {
-                                console.error('Error converting SVG to PNG:', error);
-                                reject(error);
-                            } else {
-                                console.warn("png blob : " + pngBlob);
-                                var image = {
-                                    name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
-                                    data: pngBlob,
-                                };
-                                images.push(image);
-                                resolve(pngBlob);
-                            }
-                        });
-                    });
-                    imagePromises.push(pngBlobPromise);*/
-                }
-            });
-            /*console.log(imagePromises);
-            await Promise.all(imagePromises);
-            console.log(imagePromises);
-            console.warn("Callback sent !");*/
-            var pngBlobs = await Promise.all(imagePromises);
-            console.warn(imagePromises);
-            // Now all image conversions are complete, add the images to the images array
-            zip.forEach(function (relativePath, file) {
-                // ... (rest of the code remains unchanged)
-
-                if (getFileExtension(relativePath) == "svg") {
-                    var pngBlob = pngBlobs[0];
-                    pngBlobs.shift();
-                    console.warn(pngBlob);
-                    var image = {
-                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
-                        data: pngBlob,
-                    };
-                    images.push(image);
-
-                    // ... (rest of the code remains unchanged)
-                }
-            });
-            callback(images);
-        } catch (error) {
-            console.error('Error extracting images from zip:', error);
-        }
-    };
-
-    reader.readAsArrayBuffer(zipFile);
-}
+//            zip.forEach(async function (relativePath, file) {
+//                // ... (rest of the code remains unchanged)
+//                if (getFileExtension(relativePath) == "json") {
+//                    await file.async('text').then(function (jsonData) {
+//                        scratchProjectJSON = jsonData;
+//                    })
+//                }
+//                if (getFileExtension(relativePath) == "svg") {
+//                    var svgData = await file.async('text');
+//                    var pngData = imagePromises.push( await convertSvgToPngV3(svgData));
+//                    /*var image = {
+//                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
+//                        data: pngData,
+//                    };
+//                    console.warn("hey wtf");
+//                    images.push(image);*/
+//                    //console.warn("svg data : " + svgData);
+//                    /*try {
+//                        var pngBlob = await convertSvgToPngV2(svgData);
+//                        console.warn("png blob : " + pngBlob);
+//                        var image = {
+//                            name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
+//                            data: pngBlob,
+//                        };
+//                        images.push(image);
 
 
-const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
+//                        // ... (rest of the code remains unchanged)
+//                    } catch (error) {
+//                        console.error('Error converting SVG to PNG:', error);
+//                    }*/
+//                    /*var pngBlobPromise = new Promise((resolve, reject) => {
+//                        convertSvgToPngV2(svgData, (error, pngBlob) => {
+//                            if (error) {
+//                                console.error('Error converting SVG to PNG:', error);
+//                                reject(error);
+//                            } else {
+//                                console.warn("png blob : " + pngBlob);
+//                                var image = {
+//                                    name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
+//                                    data: pngBlob,
+//                                };
+//                                images.push(image);
+//                                resolve(pngBlob);
+//                            }
+//                        });
+//                    });
+//                    imagePromises.push(pngBlobPromise);*/
+//                }
+//            });
+//            /*console.log(imagePromises);
+//            await Promise.all(imagePromises);
+//            console.log(imagePromises);
+//            console.warn("Callback sent !");*/
+//            var pngBlobs = await Promise.all(imagePromises);
+//            console.warn(imagePromises);
+//            // Now all image conversions are complete, add the images to the images array
+//            zip.forEach(function (relativePath, file) {
+//                // ... (rest of the code remains unchanged)
 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        const slice = byteCharacters.slice(offset, offset + sliceSize);
+//                if (getFileExtension(relativePath) == "svg") {
+//                    var pngBlob = pngBlobs[0];
+//                    pngBlobs.shift();
+//                    console.warn(pngBlob);
+//                    var image = {
+//                        name: "Template Scratch/Assets/Costumes/" + getFileNameWithoutExtension(relativePath) + ".png",
+//                        data: pngBlob,
+//                    };
+//                    images.push(image);
 
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
+//                    // ... (rest of the code remains unchanged)
+//                }
+//            });
+//            callback(images);
+//        } catch (error) {
+//            console.error('Error extracting images from zip:', error);
+//        }
+//    };
 
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-    }
+//    reader.readAsArrayBuffer(zipFile);
+//}
 
-    const blob = new Blob(byteArrays, { type: contentType });
-    return blob;
-}
+
+//const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+//    const byteCharacters = atob(b64Data);
+//    const byteArrays = [];
+
+//    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+//        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+//        const byteNumbers = new Array(slice.length);
+//        for (let i = 0; i < slice.length; i++) {
+//            byteNumbers[i] = slice.charCodeAt(i);
+//        }
+
+//        const byteArray = new Uint8Array(byteNumbers);
+//        byteArrays.push(byteArray);
+//    }
+
+//    const blob = new Blob(byteArrays, { type: contentType });
+//    return blob;
+//}
 
 //----------------------------------------------------------SVG TO PNG--------------------------------------------------------
 
-// Function to convert SVG to PNG
-function convertSvgToPng(svgString, callback) {
-    // Create an in-memory Image element
-    const img = new Image();
+//// Function to convert SVG to PNG
+//function convertSvgToPng(svgString, callback) {
+//    // Create an in-memory Image element
+//    const img = new Image();
 
-    // Callback when the Image is loaded
-    img.onload = function () {
-        // Create an in-memory canvas element
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+//    // Callback when the Image is loaded
+//    img.onload = function () {
+//        // Create an in-memory canvas element
+//        const canvas = document.createElement('canvas');
+//        const context = canvas.getContext('2d');
 
-        // Set canvas dimensions to match the image
-        canvas.width = img.width;
-        canvas.height = img.height;
+//        // Set canvas dimensions to match the image
+//        canvas.width = img.width;
+//        canvas.height = img.height;
 
-        // Draw the SVG image onto the canvas
-        context.drawImage(img, 0, 0);
+//        // Draw the SVG image onto the canvas
+//        context.drawImage(img, 0, 0);
 
-        try {
-            /*// Get the Data URL of the canvas (PNG format)
-            const pngDataUrl = canvas.toDataURL('image/png');
+//        try {
+//            /*// Get the Data URL of the canvas (PNG format)
+//            const pngDataUrl = canvas.toDataURL('image/png');
 
-            // Call the callback with the PNG Data URL
-            callback(null, pngDataUrl);*/
-            canvas.toBlob(function (blob) {
-                // Call the callback with the Blob
-                callback(null, blob);
-            });
-            /*canvas.toBlob(function (blob) {
-                // Call the callback with the Blob
-                return blob;
-            });*/
-        } catch (error) {
-            // In case of errors during conversion, pass the error to the callback
-            callback(error, null);
-        }
-    };
+//            // Call the callback with the PNG Data URL
+//            callback(null, pngDataUrl);*/
+//            canvas.toBlob(function (blob) {
+//                // Call the callback with the Blob
+//                callback(null, blob);
+//            });
+//            /*canvas.toBlob(function (blob) {
+//                // Call the callback with the Blob
+//                return blob;
+//            });*/
+//        } catch (error) {
+//            // In case of errors during conversion, pass the error to the callback
+//            callback(error, null);
+//        }
+//    };
 
-    // Set the SVG data as the Image source
-    img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
-}
+//    // Set the SVG data as the Image source
+//    img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
+//}
 
-async function convertSvgToPngV2(svgString) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
+//async function convertSvgToPngV2(svgString) {
+//    return new Promise((resolve, reject) => {
+//        const img = new Image();
 
-        img.onload = function () {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+//        img.onload = function () {
+//            const canvas = document.createElement('canvas');
+//            const context = canvas.getContext('2d');
 
-            canvas.width = img.width;
-            canvas.height = img.height;
+//            canvas.width = img.width;
+//            canvas.height = img.height;
 
-            context.drawImage(img, 0, 0);
+//            context.drawImage(img, 0, 0);
 
-            try {
-                canvas.toBlob(function (blob) {
-                    resolve(blob);
-                });
-            } catch (error) {
-                reject(error);
-            }
-        };
+//            try {
+//                canvas.toBlob(function (blob) {
+//                    resolve(blob);
+//                });
+//            } catch (error) {
+//                reject(error);
+//            }
+//        };
 
-        img.onerror = function (error) {
-            reject(error);
-        };
+//        img.onerror = function (error) {
+//            reject(error);
+//        };
 
-        img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
-    });
-}
+//        img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
+//    });
+//}
 
-async function convertSvgToPngV3(svgString) {
-    // Set the SVG data as the Image source
-    const img = new Image();
-    img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
+//async function convertSvgToPngV3(svgString) {
+//    // Set the SVG data as the Image source
+//    const img = new Image();
+//    img.src = 'data:image/svg+xml,' + encodeURIComponent(svgString);
 
-    // Wait for the Image to load
-    await new Promise((resolve) => {
-        img.onload = resolve;
-        img.onerror = () => {
-            throw new Error("Failed to load the SVG image.");
-        };
-    });
+//    // Wait for the Image to load
+//    await new Promise((resolve) => {
+//        img.onload = resolve;
+//        img.onerror = () => {
+//            throw new Error("Failed to load the SVG image.");
+//        };
+//    });
 
-    // Create an in-memory canvas element
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+//    // Create an in-memory canvas element
+//    const canvas = document.createElement('canvas');
+//    const context = canvas.getContext('2d');
 
-    // Set canvas dimensions to match the image
-    canvas.width = img.width;
-    canvas.height = img.height;
+//    // Set canvas dimensions to match the image
+//    canvas.width = img.width;
+//    canvas.height = img.height;
 
-    // Draw the SVG image onto the canvas
-    context.drawImage(img, 0, 0);
+//    // Draw the SVG image onto the canvas
+//    context.drawImage(img, 0, 0);
 
-    // Convert canvas to Blob using createImageBitmap
-    const blob = await new Promise((resolve) => {
-        canvas.toBlob(resolve, 'image/png');
-    });
+//    // Convert canvas to Blob using createImageBitmap
+//    const blob = await new Promise((resolve) => {
+//        canvas.toBlob(resolve, 'image/png');
+//    });
 
-    return blob;
-}
+//    return blob;
+//}
 
 
-// Example usage:
-/*const svgString = `
-<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
-  <rect width="100" height="100" fill="blue" />
-</svg>
-`;
+//// Example usage:
+///*const svgString = `
+//<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+//  <rect width="100" height="100" fill="blue" />
+//</svg>
+//`;
 
-convertSvgToPng(svgString, (error, pngDataUrl) => {
-    if (error) {
-        console.error('Error converting SVG to PNG:', error);
-    } else {
-        console.log('PNG Data URL:', pngDataUrl);
-        // You can now use the PNG Data URL as the source for an image element or do whatever you want with it.
-    }
-});*/
+//convertSvgToPng(svgString, (error, pngDataUrl) => {
+//    if (error) {
+//        console.error('Error converting SVG to PNG:', error);
+//    } else {
+//        console.log('PNG Data URL:', pngDataUrl);
+//        // You can now use the PNG Data URL as the source for an image element or do whatever you want with it.
+//    }
+//});*/
 
 
 //---------------------------------------------------UNITY IMPORT SETTINGS TEMPLATES---------------------------------------------------
