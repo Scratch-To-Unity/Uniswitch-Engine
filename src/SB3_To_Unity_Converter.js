@@ -372,22 +372,28 @@ function addScript(sprite) {
                 proceduresDefinition += "(";
                 var arguments = JSON.parse(blockList[prototypeID].mutation.argumentnames);
                 //processing value arguments
+                status("Creating function " + prototypeID + ".");
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
-                    let inputType = blockList[input[1]].opcode;
-                    if (inputType == "argument_reporter_string_number") {
-                        proceduresDefinition += "object " + standardizeName(arguments[arg]);
-                        proceduresDefinition += ", ";
+                    if (input[1] != null) {
+                        let inputType = blockList[input[1]].opcode;
+                        if (inputType == "argument_reporter_string_number") {
+                            proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                            proceduresDefinition += ", ";
+                        }
                     }
+                    
                 }
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
-                    let inputType = blockList[input[1]].opcode;
-                    if (inputType == "argument_reporter_boolean") {
-                        proceduresDefinition += "object " + standardizeName(arguments[arg]);
-                        proceduresDefinition += ", ";
+                    if (input[1] != null) {
+                        let inputType = blockList[input[1]].opcode;
+                        if (inputType == "argument_reporter_boolean") {
+                            proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                            proceduresDefinition += ", ";
+                        }
                     }
                 }
                 proceduresDefinition = proceduresDefinition.slice(0, -2);
@@ -1004,14 +1010,29 @@ function addBlock(blockID) {
             //block argument
             console.log("Adding block argument " + property);
             if (block.opcode != "control_repeat_until" && block.opcode != "control_if_else" && block.opcode != "control_if") {
-                l += addBlock(value[1]);
+                if (typeof (value[1]) == "object" && value[1] != null) {
+                    if (value[1][0] == 12) {
+                        var name = standardizeName(value[1][1]);
+                        if (doesArrayContainName(globalVariables, name)) {
+                            l += "GlobalVariables.";
+                        }
+                        //adding variable name as an argument
+                        l += name;
+                    }
+                } else {
+                    if (value[1] == null) {
+                        l += "0f";
+                    } else {
+                        l += addBlock(value[1]);
+                    }
+                }
             }
             
         }
         if (value[0] === 3) {
             //written argument replaced by a block
             console.log("Adding block argument on top of written argument (shadow block) " + property);
-            if (typeof(value[1]) == "object") {
+            if (typeof(value[1]) == "object" && value[1] != null) {
                 if (value[1][0] == 12) {
                     var name = standardizeName(value[1][1]);
                     if (doesArrayContainName(globalVariables, name)) {
@@ -1021,8 +1042,11 @@ function addBlock(blockID) {
                     l += name;
                 }
             } else {
-                
-                l += addBlock(value[1]);
+                if (value[1] == null) {
+                    l += "0f";
+                } else {
+                    l += addBlock(value[1]);
+                }
             }
             
         }
