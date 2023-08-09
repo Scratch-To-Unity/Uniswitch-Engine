@@ -353,6 +353,8 @@ function addScript(sprite) {
     });
 
     //adding custom blocks and events receivers
+    let broadcastNames = [];
+    let broadcastIDs = [];
     for (let blockID in blockList) {
         var block = blockList[blockID]
         if (block.topLevel == true) {
@@ -396,7 +398,10 @@ function addScript(sprite) {
                         }
                     }
                 }
-                proceduresDefinition = proceduresDefinition.slice(0, -2);
+                if (arguments.length > 0) {
+                    proceduresDefinition = proceduresDefinition.slice(0, -2);
+                }
+                
                 proceduresDefinition += ")";
 
                 code += proceduresDefinition;
@@ -410,8 +415,33 @@ function addScript(sprite) {
                 code += "}";
             }
             if (block.opcode == "event_whenbroadcastreceived") {
-
                 code += addBlock(blockID);
+                let broadcastName = standardizeName(block.fields.BROADCAST_OPTION[0]);
+                broadcastNames.push(broadcastName);
+                broadcastIDs.push(blockID);
+            }
+        }
+    }
+
+    let usedBroadcasts = [];
+    for (let blockID in blockList) {
+        var block = blockList[blockID]
+        if (block.opcode == "event_whenbroadcastreceived") {
+            let broadcastName = standardizeName(block.fields.BROADCAST_OPTION[0]);
+            if (!usedBroadcasts.includes(broadcastName)) {
+                code += "public IEnumerator Message";
+                code += broadcastName;
+                usedBroadcasts.push(broadcastName);
+                code += "() {yield return null;";
+                //Add all the messages
+                for (var i = 0; i < broadcastNames.length; i++) {
+                    if (broadcastNames[i] == broadcastName) {
+                        code += "yield return StartCoroutine(Message";
+                        code += standardizeName(broadcastIDs[i]);
+                        code += "());";
+                    }
+                }
+                code += "}";
             }
         }
     }
@@ -812,7 +842,7 @@ function addBlock(blockID) {
                 break;
             case "BROADCAST_OPTION":
                 l += "public IEnumerator Message"
-                l += standardizeName(value[0]);
+                l += standardizeName(blockID);
                 l += "() {yield return null;";
                 break;
             case "LIST":
@@ -857,6 +887,46 @@ function addBlock(blockID) {
             case "CLONE_OPTION":
                 l += '"' + value[0] + '"'
                 break;
+            case "PROPERTY":
+                const menu = block.inputs.OBJECT[1];
+                l += addBlock(menu);
+                l += ".";
+                switch (value[0]) {
+                    case "direction":
+                        l += "transform.rotation.z + 90";
+                        break;
+                    case "costume #":
+                        l += "currentCostumeIndex";
+                        break;
+                    case "costume name":
+                        l += "currentCostumeName";
+                        break;
+                    case "size":
+                        l += "transform.localScale.x";
+                        break;
+                    default:
+                        l += standardizeName(value[0]);
+                        break;
+                }
+                return l;
+                break;
+            case "OBJECT":
+                l += 'GameObject.Find("';
+                l += standardizeName(value[0]);
+                l += '").GetComponent<ScratchLib>()';
+                return l;
+                break;
+            case "NUMBER_NAME":
+                switch (value[0]) {
+                    case "number":
+                        l += "currentCostumeIndex";
+                        break;
+                    case "name":
+                        l += "currentCostumeName";
+                        break;
+                    default:
+                        console.error("hahahahahahahahahahahahahahahahahaha...    IMPOSSIBLEEEE");
+                }
             default:
                 unknownBlock("field", "field");
         }
@@ -870,6 +940,7 @@ function addBlock(blockID) {
     //adding argument inputs and separators
     var entries = Object.entries(block.inputs);
     entries.forEach(([property, value], index) => {
+        if (block.opcode == "sensing_of") { return; }
         if (value[0] === 1) {
             //written argument
             console.log("Adding written argument " + property);

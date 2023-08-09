@@ -210,6 +210,20 @@
             "delay": false,
             "after": ""
         },
+        "looks_costumenumbername": {
+            "function": "",
+            "separator": "",
+            "close": "",
+            "delay": false,
+            "after": ""
+        },
+        "motion_direction": {
+            "function": "transform.rotation.z",
+            "separator": "",
+            "close": "",
+            "delay": false,
+            "after": ""
+        },
         "looks_goforwardbackwardlayers": {
             "function": "",
             "separator": "",
@@ -400,9 +414,9 @@
             "after": ""
         },
         "operator_equals": {
-            "function": "(",
-            "separator": ".ToString()==",
-            "close": ".ToString())",
+            "function": "((",
+            "separator": ").ToString()==(",
+            "close": ").ToString())",
             "delay": false,
             "after": ""
         },
@@ -414,12 +428,13 @@
             "after": ""
         },
         "operator_join": {
-            "function": "((string)",
-            "separator": "+(string)",
-            "close": ")",
+            "function": "((",
+            "separator": ").ToString()+(",
+            "close": ").ToString())",
             "delay": false,
             "after": ""
         },
+
         "operator_length": {
             "function": "((string)",
             "separator": "",
@@ -445,6 +460,20 @@
             "function": "",
             "separator": "",
             "close": ")",
+            "delay": false,
+            "after": ""
+        },
+        "sensing_of": {
+            "function": "",
+            "separator": "",
+            "close": "",
+            "delay": false,
+            "after": ""
+        },
+        "sensing_of_object_menu": {
+            "function": "",
+            "separator": "",
+            "close": "",
             "delay": false,
             "after": ""
         },
