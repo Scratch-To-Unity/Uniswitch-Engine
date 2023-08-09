@@ -24,7 +24,7 @@ let endTime = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v13.zip";
+const templatePath = "Templates/Template Scratch v14.zip";
 const blockLibPath = "blockList.json";
 
 
