@@ -39,7 +39,6 @@ The converter actually doesn't support :
  - sounds
  - some event blocks
  - color detection
- - access to other sprites variables
  - variable monitors
  - turbo mode
  - rounded pen strokes
