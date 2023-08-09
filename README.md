@@ -48,3 +48,6 @@ The converter only support .sb3 files.
 
 ![ScratchLib logo2(1)](https://github.com/Lythox-Supreme/Scratch-To-Unity/assets/139252857/33da60b3-48bc-44bb-926a-cb2bac74cc62)
 
+# Test
+
+The converter is hosted as a test build here : http://10boutons.free.fr/sb3ToUnity/Scratch-To-Unity.html
