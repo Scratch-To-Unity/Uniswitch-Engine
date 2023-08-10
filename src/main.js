@@ -2,7 +2,7 @@
 
 let scratchProject =  null;
 
-let projectName = "project";
+let projectName = "untitled";
 
 let progress = 0;
 let estimatedWork = 0;
@@ -29,7 +29,7 @@ const formatCode = true;
 
 //utilities
 const delay = "yield return new WaitForEndOfFrame();";
-const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES"];
+const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib"];
 //////////////////////////////////////////////////////////////////////////////////
 
 
