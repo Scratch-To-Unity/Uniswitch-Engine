@@ -555,14 +555,14 @@
             "after": ""
         },
         "pen_penDown": {
-            "function": "isPenDown = true",
+            "function": "PenDown()",
             "separator": "",
             "close": ";",
             "delay": false,
             "after": ""
         },
         "pen_penUp": {
-            "function": "isPenDown = false",
+            "function": "PenUp()",
             "separator": "",
             "close": ";",
             "delay": false,

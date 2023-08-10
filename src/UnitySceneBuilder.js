@@ -1,3 +1,5 @@
+let unityGameScene = null;
+let usedIdentifiers = [];
 
 function handleSprites(scratchProject) {
     var sprites = scratchProject.targets;

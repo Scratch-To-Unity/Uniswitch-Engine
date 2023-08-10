@@ -1,9 +1,4 @@
-let test = 2;
-
-function helloworld() {
-    console.error("hello world");
-}
-
+let workspace = [];
 
 function getFileExtension(filename) {
     return filename.split('.').pop();

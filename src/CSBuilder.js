@@ -1,3 +1,14 @@
+let blockList;
+let blockDic;
+let emojilib;
+let globalVariables = [];
+let globalLists = [];
+let localVariables = [];
+let localLists = [];
+
+let warp = false;
+let loopIdx = 0;
+let currentFunctionName;
 
 function addScript(sprite) {
     status("Adding script for : " + sprite.name);
@@ -153,6 +164,7 @@ function addScript(sprite) {
                 code += "}";
             }
             if (block.opcode == "event_whenbroadcastreceived") {
+                warp = false;
                 code += addBlock(blockID);
                 let broadcastName = standardizeName(block.fields.BROADCAST_OPTION[0]);
                 broadcastNames.push(broadcastName);
@@ -284,7 +296,23 @@ function addVariables(sprite, static = "") {
             status("List " + value[0] + " is longer than " + maxListLenght + " elements. The data wasn't imported.");
             l += "{}";
         } else {
-            l += `{ ${content.map(item => typeof item === 'number' ? (Number.isInteger(item) ? item : item.toFixed(2) + 'f') : `"${item}"`).join(', ')}      }`;
+            //l += `{ ${content.map(item => typeof item === 'number' ? (Number.isInteger(item) ? item : item.toFixed(2) + 'f') : `"${item}"`).join(', ')}      }`;
+            const formattedArray = content.map(item => {
+                if (typeof item === 'number') {
+                    if (Number.isInteger(item)) {
+                        return item.toString();
+                    } else {
+                        return item.toFixed(2) + 'f';
+                    }
+                } else if (typeof item === 'string') {
+                    return `"${item.replace(/"/g, '\\"')}"`;
+                } else {
+                    return JSON.stringify(item);
+                }
+            });
+
+            const formattedString = `[ ${formattedArray.join(', ')} ]`;
+            l += formattedString;
         }
         l += ";";
 
@@ -648,9 +676,17 @@ function addBlock(blockID) {
                 return l;
                 break;
             case "OBJECT":
+                let gameObjectName = standardizeName(value[0]);
+                let scriptName = standardizeName(value[0] + "Script");
+                if (value[0] == "_stage_") {
+                    gameObjectName = "Stage";
+                    scriptName = "StageScript";
+                }
                 l += 'GameObject.Find("';
-                l += standardizeName(value[0]);
-                l += '").GetComponent<ScratchLib>()';
+                l += gameObjectName;
+                l += '").GetComponent<';
+                l += scriptName;
+                l += '>()';
                 return l;
                 break;
             case "NUMBER_NAME":
@@ -662,7 +698,7 @@ function addBlock(blockID) {
                         l += "currentCostumeName";
                         break;
                     default:
-                        console.error("hahahahahahahahahahahahahahahahahaha...    IMPOSSIBLEEEE");
+                        break;
                 }
             default:
                 unknownBlock("field", "field");
@@ -697,6 +733,7 @@ function addBlock(blockID) {
                 //we'll just check the first letter
                 //I hope that's alright
                 var inputValue = value[1][1];
+                inputValue = inputValue.replace(/"/g, '\\"');
                 if (inputValue == "") {
                     status("Empty input found.");
                     l += "0f";
@@ -773,6 +810,7 @@ function addBlock(blockID) {
                     //we'll just check the first letter
                     //I hope that's alright
                     var inputValue = value[1][1];
+                    inputValue = inputValue.replace(/"/g, '\\"');
                     if (inputValue == "") {
                         status("Empty input found.");
                         l += "0f";

@@ -1,19 +1,7 @@
 ﻿let scratchProjectJSON = "";
-let unityGameScene =  null;
-let scratchProject =  null;
-let blockList;
-let blockDic;
-let emojilib;
-let globalVariables = [];
-let globalLists =     [];
-let localVariables =  [];
-let localLists =      [];
-let usedIdentifiers = [];
-let workspace =       [];
 
-let warp = false;
-let loopIdx = 0;
-let currentFunctionName;
+let scratchProject =  null;
+
 let projectName = "project";
 
 let progress = 0;
@@ -58,15 +46,8 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 
 //TO DO:
-//next template : v14
+//next template : v15
 //if standardized name is null, replace it by a random name stored in a linked-list
-//Add screen edge detection (relative to screen size) :/
-
-//Teamplate :
-//change penwidth en float
-//add penup and pendown
-
-console.log(test);
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
@@ -91,7 +72,9 @@ async function convert() {
         });*/
 
     let fileInput = document.getElementById('fileInput').files[0];
-    estimatedProjectSize = fileInput.size;
+    if (fileInput != undefined) {
+        estimatedProjectSize = fileInput.size;
+    }
     let projectID = document.getElementById('URLInput').value;
     if (projectID != "" && projectID.length > 5) {
         status("Getting sb3 file from scratch's website.");
