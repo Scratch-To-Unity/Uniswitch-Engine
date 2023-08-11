@@ -65,107 +65,104 @@ async function convert() {
     estimatedWork += 200; //for the zipping
 
     let fileInput = document.getElementById('fileInput').files[0];
+
     if (fileInput != undefined) {
         estimatedProjectSize = fileInput.size;
     }
+
     let projectID = document.getElementById('URLInput').value;
     if (projectID != "" && projectID.length > 5) {
-        SetStatus("Getting sb3 file from scratch's website.");
-        estimatedWork += 100;
-        //API from https://github.com/forkphorus/sb-downloader
-        let previousPercent = 0;
-        let previousType = "";
-        const options = {
-            // May be called periodically with progress updates.
-            onProgress: (type, loaded, total) => {
-                // type is 'metadata', 'project', 'assets', or 'compress'
-                console.log(type, loaded / total);
-                if (previousType != type) {
-                    previousType = type;
-                    previousPercent = 0;
-                }
-                let percent = loaded / total * 100;
-                addProgress((percent - previousPercent) / 4); //there are 4 steps I guess
-                previousPercent = percent;
-            }
-        };
-        const project = await SBDL.downloadProjectFromID(projectID, options);
-
-        const type = project.type;
-        // arrayBuffer is an ArrayBuffer of the compressed project data in the format given by type.
-        const arrayBuffer = project.arrayBuffer;
-
-        const title = project.title;
-
-        if (type != "sb3") {
-            throw new Error("Not a sb3 project. Consider converting this project into sb3.");
-        }
-
-        const projectBlob = new Blob([arrayBuffer]);
-        fileInput = projectBlob;
-        projectName = title;
-        estimatedProjectSize = arrayBuffer.byteLength;
+        fileInput = await getProjectFromID(projectID);
+        estimatedProjectSize = fileInput.size;
     }
-    console.log(fileInput);
 
+    //estimate conversion duration
     //let estimatedTime = estimatedProjectSize / 1000 / 160;
     let projectSizeMegaBytes = estimatedProjectSize / 1000 / 1000;
     let estimatedTime = 5.45 ** (0.156 * projectSizeMegaBytes);
     document.getElementById("time").innerHTML = "Estimated time : " + estimatedTime.toFixed(1) + "s";
 
     //Importing template
+    SetStatus("Importing template...");
     try {
-        SetStatus("Importing template...");
-        const fileArray = await unzipFromURL(templatePath);  //Action 1
-        workspace = fileArray;
-
-
+        const template = await unzipFromURL(templatePath);  //Action 1
+        workspace = template;
     } catch (error) {
         console.error(error);
     }
+
     const url = blockLibPath;
-    //Get BlockLib
-    getJSONData(url)  //Action 2
-        .then(async jsonData => {
-            addProgress();
-            blockDic = jsonData;
-            console.log(jsonData);
-            document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
-            SetStatus("Extracting images...");
-            //Get images, sounds, and project's JSON
-            await extractImagesFromZippedFile(fileInput, function (images) { //Action 3
-                scratchProject = JSON.parse(scratchProjectJSON); //Action 4
-                addProgress();
-                workspace = workspace.concat(images);
+    //Get the block translation dictionnary
+    blockDic = await getBlockDictionnary(url);  //Action 2
+    addProgress();
 
-                unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
+    document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
 
-                SetStatus("Generating unity scene...");
-                
-                handleSprites(scratchProject);  //Action 5
-                workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
+    SetStatus("Extracting images...");
+    //Get images, sounds, and project's JSON
+    await extractImagesFromZippedFile(fileInput, function (images) { //Action 3
+        scratchProject = JSON.parse(scratchProjectJSON); //Action 4
+        addProgress();
+        workspace = workspace.concat(images);
 
-                SetStatus("Zipping unity folder...");
-                console.log("progress until here : " + progress);
-                console.log(workspace);
-                estimatedWork += workspace.length;
-                zipAndDownloadFiles(workspace);  //Action 6
-                
-            });
-        });
+        unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
+
+        SetStatus("Generating unity scene...");
+        
+        handleSprites(scratchProject);  //Action 5
+        workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
+
+        SetStatus("Zipping unity folder...");
+        console.log("progress until here : " + progress);
+        console.log(workspace);
+        estimatedWork += workspace.length;
+        zipAndDownloadFiles(workspace);  //Action 6
+    });
 }
 
-function getJSONData(url) {
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error: Could not retrieve JSON data from the URL.");
+async function getProjectFromID(ID){
+    SetStatus("Getting sb3 file from scratch's website.");
+    estimatedWork += 100;
+    //API from https://github.com/forkphorus/sb-downloader
+    let previousPercent = 0;
+    let previousType = "";
+    const options = {
+        // May be called periodically with progress updates.
+        onProgress: (type, loaded, total) => {
+            // type is 'metadata', 'project', 'assets', or 'compress'
+            console.log(type, loaded / total);
+            if (previousType != type) {
+                previousType = type;
+                previousPercent = 0;
             }
-            return response.json();
-        })
-        .catch(error => {
-            console.error(error);
-        });
+            let percent = loaded / total * 100;
+            addProgress((percent - previousPercent) / 4); //there are 4 steps I guess
+            previousPercent = percent;
+        }
+    };
+    const project = await SBDL.downloadProjectFromID(ID, options);
+
+    const type = project.type;
+    // arrayBuffer is an ArrayBuffer of the compressed project data in the format given by type.
+    const arrayBuffer = project.arrayBuffer;
+
+    const title = project.title;
+
+    if (type != "sb3") {
+        throw new Error("Not a sb3 project. Consider converting this project into sb3.");
+    }
+
+    const projectBlob = new Blob([arrayBuffer]);
+    fileInput = projectBlob;
+    projectName = title;
+    estimatedProjectSize = arrayBuffer.byteLength;
+    return fileInput;
+}
+
+async function getBlockDictionnary(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
 }
 
 function SetStatus(string) {
@@ -191,61 +188,7 @@ function standardizeName(name) {
 }
 
 function scratchNameToUnityName(name){
-    const letterMap = {
-        '0': 'A',
-        '1': 'B',
-        '2': 'C',
-        '3': 'D',
-        '4': 'E',
-        '5': 'F',
-        '6': 'G',
-        '7': 'H',
-        '8': 'I',
-        '9': 'J',
-        '!': 'K',
-        '@': 'L',
-        '#': 'M',
-        '$': 'N',
-        '%': 'O',
-        '^': 'P',
-        '&': 'Q',
-        '*': 'R',
-        '(': 'S',
-        ')': 'T',
-        '_': 'U',
-        '-': 'V',
-        '+': 'W',
-        '=': 'X',
-        '[': 'Y',
-        ']': 'Z',
-        '{': 'a',
-        '}': 'b',
-        '|': 'c',
-        ';': 'd',
-        ':': 'e',
-        '\'': 'f',
-        '"': 'g',
-        '<': 'h',
-        '>': 'i',
-        ',': 'j',
-        '.': 'k',
-        '/': 'l',
-        '?': 'm',
-        '`': 'n',
-        '~': 'o',
-        '¡': 'p',
-        '¢': 'q',
-        '£': 'r',
-        '¤': 's',
-        '¥': 't',
-        '¦': 'u',
-        '§': 'v',
-        '¨': 'w',
-        '©': 'x',
-        'ª': 'y',
-        '«': 'z',
-        '¬': ' ',
-    };
+    
     let result = "";
     for (var i = 0; i < name.length; i++) {
         let char = letterMap[name[i]];
@@ -355,3 +298,59 @@ function addProgress(value = 1) {
     document.getElementById("progressBar").innerHTML = percentage.toFixed(1) + "%";
     document.getElementById("progressBar").style.width = percentage.toFixed(2) + '%';
 }
+
+const letterMap = {
+    '0': 'A',
+    '1': 'B',
+    '2': 'C',
+    '3': 'D',
+    '4': 'E',
+    '5': 'F',
+    '6': 'G',
+    '7': 'H',
+    '8': 'I',
+    '9': 'J',
+    '!': 'K',
+    '@': 'L',
+    '#': 'M',
+    '$': 'N',
+    '%': 'O',
+    '^': 'P',
+    '&': 'Q',
+    '*': 'R',
+    '(': 'S',
+    ')': 'T',
+    '_': 'U',
+    '-': 'V',
+    '+': 'W',
+    '=': 'X',
+    '[': 'Y',
+    ']': 'Z',
+    '{': 'a',
+    '}': 'b',
+    '|': 'c',
+    ';': 'd',
+    ':': 'e',
+    '\'': 'f',
+    '"': 'g',
+    '<': 'h',
+    '>': 'i',
+    ',': 'j',
+    '.': 'k',
+    '/': 'l',
+    '?': 'm',
+    '`': 'n',
+    '~': 'o',
+    '¡': 'p',
+    '¢': 'q',
+    '£': 'r',
+    '¤': 's',
+    '¥': 't',
+    '¦': 'u',
+    '§': 'v',
+    '¨': 'w',
+    '©': 'x',
+    'ª': 'y',
+    '«': 'z',
+    '¬': ' ',
+};
