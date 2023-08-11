@@ -53,7 +53,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 async function convert() {
     startTime = performance.now();
-    status("Started Converting...");
+    SetStatus("Started Converting...");
 
     usedIdentifiers = [];
 
@@ -70,7 +70,7 @@ async function convert() {
     }
     let projectID = document.getElementById('URLInput').value;
     if (projectID != "" && projectID.length > 5) {
-        status("Getting sb3 file from scratch's website.");
+        SetStatus("Getting sb3 file from scratch's website.");
         estimatedWork += 100;
         //API from https://github.com/forkphorus/sb-downloader
         let previousPercent = 0;
@@ -115,7 +115,7 @@ async function convert() {
 
     //Importing template
     try {
-        status("Importing template...");
+        SetStatus("Importing template...");
         const fileArray = await unzipFromURL(templatePath);  //Action 1
         workspace = fileArray;
 
@@ -131,7 +131,7 @@ async function convert() {
             blockDic = jsonData;
             console.log(jsonData);
             document.getElementById('fact').innerHTML = "We currently support " + Object.keys(blockDic.blocks).length + " scratch blocks !";
-            status("Extracting images...");
+            SetStatus("Extracting images...");
             //Get images, sounds, and project's JSON
             await extractImagesFromZippedFile(fileInput, function (images) { //Action 3
                 scratchProject = JSON.parse(scratchProjectJSON); //Action 4
@@ -140,12 +140,12 @@ async function convert() {
 
                 unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
 
-                status("Generating unity scene...");
+                SetStatus("Generating unity scene...");
                 
                 handleSprites(scratchProject);  //Action 5
                 workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
 
-                status("Zipping unity folder...");
+                SetStatus("Zipping unity folder...");
                 console.log("progress until here : " + progress);
                 console.log(workspace);
                 estimatedWork += workspace.length;
@@ -168,7 +168,7 @@ function getJSONData(url) {
         });
 }
 
-function status(string) {
+function SetStatus(string) {
     document.getElementById('status').innerHTML = string;
     console.log(string);
 }
@@ -268,7 +268,7 @@ function startsWithNumber(str) {
 }
 
 function unknownBlock(skipped, library) {
-    status("Unknown " + skipped + " skipped. Please update " + library + " library, or remove hacked blocks.");
+    SetStatus("Unknown " + skipped + " skipped. Please update " + library + " library, or remove hacked blocks.");
 }
 
 function getTypeByName(arr, targetName) {

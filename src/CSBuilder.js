@@ -11,7 +11,7 @@ let loopIdx = 0;
 let currentFunctionName;
 
 function addScript(sprite) {
-    status("Adding script for : " + sprite.name);
+    SetStatus("Adding script for : " + sprite.name);
 
     blockList = sprite.blocks;
     warp = false;
@@ -122,7 +122,7 @@ function addScript(sprite) {
                 proceduresDefinition += "(";
                 var arguments = JSON.parse(blockList[prototypeID].mutation.argumentnames);
                 //processing value arguments
-                status("Creating function " + prototypeID + ".");
+                SetStatus("Creating function " + prototypeID + ".");
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
@@ -292,7 +292,7 @@ function addVariables(sprite, static = "") {
 
         l += " = new List<object> ";
         if (value[1].length > maxListLenght) {
-            status("List " + value[0] + " is longer than " + maxListLenght + " elements. The data wasn't imported.");
+            SetStatus("List " + value[0] + " is longer than " + maxListLenght + " elements. The data wasn't imported.");
             l += "{}";
         } else {
             //l += `{ ${content.map(item => typeof item === 'number' ? (Number.isInteger(item) ? item : item.toFixed(2) + 'f') : `"${item}"`).join(', ')}      }`;
@@ -734,7 +734,7 @@ function addBlock(blockID) {
                 var inputValue = value[1][1];
                 inputValue = inputValue.replace(/"/g, '\\"');
                 if (inputValue == "") {
-                    status("Empty input found.");
+                    SetStatus("Empty input found.");
                     l += "0f";
                 } else {
                     if (startsWithNumber(inputValue.toString())) {
@@ -767,7 +767,7 @@ function addBlock(blockID) {
                     var inputValue = value[1][1];
                     inputValue = inputValue.replace(/"/g, '\\"');
                     if (inputValue == "") {
-                        status("Empty input found.");
+                        SetStatus("Empty input found.");
                         l += "0f";
                     } else {
                         if (startsWithNumber(inputValue.toString())) {

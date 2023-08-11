@@ -22,7 +22,7 @@ function handleSprite(sprite) {
 
 function addGameObject(spriteName, costumeGUID, px, py, isShown, scriptGUID, layerOrder, scale, direction, fileID, costumes) {
     if (usedIdentifiers.includes(stringToNumber(spriteName))) {
-        status("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.")
+        SetStatus("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.")
         throw new Error("Duplicate identifiers : " + stringToNumber(spriteName) + ". Please change the sprite name.");
     }
     var sortingLayer = "0";
