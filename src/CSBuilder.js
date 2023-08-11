@@ -60,14 +60,13 @@ function addScript(sprite) {
         });
     }
 
-    if (sprite.isStage) {
-        code += 'private void Awake(){spriteRenderer.sortingLayerName = "Stage";}';
-    }
-
-
     //adding all the "when flag cliked" in start
     var startBlocks = [];
-    code += "private void Start(){if(isClone){";
+    code += "private void Start(){";
+    if (sprite.isStage) {
+        code += 'spriteRenderer.sortingLayerName = "Stage";';
+    }
+    code += 'if(isClone){';
     for (let block in blockList) {
         if (blockList[block].topLevel == true) {
             if (blockList[block].opcode == "control_start_as_clone") {
