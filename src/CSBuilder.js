@@ -755,18 +755,6 @@ function addBlock(blockID) {
                         }
                     }
                 }
-                /*if (typeof inputValue == "number") {
-                    l += value[1][1];
-                    if (containsDot(inputValue)) {
-                        l += "f";
-                    }
-                } else {
-                    if (property == "BROADCAST_INPUT") {
-                        l += '"Message' + standardizeName(value[1][1]) + '"';
-                    } else {
-                        l += '"' + value[1][1] + '"';
-                    }
-                }*/
             } else {
                 if (value[1] == null) {
                     unknownBlock("block", "block");
@@ -774,38 +762,6 @@ function addBlock(blockID) {
                     return;
                 }
                 if (typeof (value[1]) == "object") {
-                    /*switch (value[1][0]) {
-                        case 4:
-                            //float
-                            l += value[1][1] + "f";
-                            break;
-                        case 5:
-                            //float
-                            l += value[1][1] + "f";
-                            break;
-                        case 6:
-                            //int
-                            l += value[1][1];
-                            break;
-                        case 7:
-                            //int
-                            l += value[1][1];
-                            break;
-                        case 8:
-                            //angle
-                            l += value[1][1];
-                            break;
-                        case 9:
-                            //color
-                            l += value[1][1];
-                            break;
-                        case 10:
-                            l += '"' + value[1][1] + '"';
-                            break;
-                        default:
-                            status("Unknown argument" + value[1] + " found in " + blockID);
-                    }*/
-
                     //I have to find the type of the input
                     //we'll just check the first letter
                     //I hope that's alright
@@ -832,19 +788,6 @@ function addBlock(blockID) {
                             }
                         }
                     }
-                    /*if (typeof inputValue == "number") {
-                        l += value[1][1];
-                        if (containsDot(inputValue)) {
-                            l += "f";
-                        }
-                    } else {
-                        if (property == "BROADCAST_INPUT") {
-                            l += '"Message' + standardizeName(value[1][1]) + '"';
-                        } else {
-                            l += '"' + value[1][1] + '"';
-                        }
-                    }*/
-
                 } else {
                     l += addBlock(value[1]);
                 }

@@ -64,13 +64,6 @@ async function convert() {
     estimatedWork += 1; //for the zipping
     estimatedWork += 200; //for the zipping
 
-    /*await fetch("https://cdn.jsdelivr.net/npm/emojilib@3.0.10/dist/emoji-en-US.json")
-        .then(response =>{
-            response.json().then(value => { emojilib = value; });
-            console.error(emojilib);
-            console.error(emojilib["grinning"]);
-        });*/
-
     let fileInput = document.getElementById('fileInput').files[0];
     if (fileInput != undefined) {
         estimatedProjectSize = fileInput.size;
@@ -362,63 +355,3 @@ function addProgress(value = 1) {
     document.getElementById("progressBar").innerHTML = percentage.toFixed(1) + "%";
     document.getElementById("progressBar").style.width = percentage.toFixed(2) + '%';
 }
-
-//---------------------------------------------------UNITY IMPORT SETTINGS TEMPLATES---------------------------------------------------
-
-
-//SVG importer settings
-/*fileFormatVersion: 2
-guid: 283ae88d67f9f8540aee17f37ed9c388
-ScriptedImporter:
-  internalIDToNameTable: []
-  externalObjects: {}
-  serializedVersion: 2
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
-  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}
-  svgType: 1
-  texturedSpriteMeshType: 0
-  svgPixelsPerUnit: 100
-  gradientResolution: 64
-  alignment: 0
-  customPivot: {x: 0, y: 0}
-  generatePhysicsShape: 0
-  viewportOptions: 0
-  preserveViewport: 0
-  advancedMode: 0
-  predefinedResolutionIndex: 2
-  targetResolution: 720
-  resolutionMultiplier: 2
-  stepDistance: 10
-  samplingStepDistance: 100
-  maxCordDeviationEnabled: 0
-  maxCordDeviation: 1
-  maxTangentAngleEnabled: 0
-  maxTangentAngle: 5
-  keepTextureAspectRatio: 1
-  textureSize: 1024
-  textureWidth: 256
-  textureHeight: 256
-  wrapMode: 0
-  filterMode: 1
-  sampleCount: 2
-  preserveSVGImageAspect: 0
-  useSVGPixelsPerUnit: 1
-  spriteData:
-    TessellationDetail: 0
-    SpriteRect:
-      name: bcf454acf82e4504149f7ffe07081dbc
-      originalName: 
-      pivot: {x: 5.1263156, y: 5.12}
-      alignment: 0
-      border: {x: 0, y: 0, z: 0, w: 0}
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 95
-        height: 100
-      spriteID: d058db1872292fa4489e7f183a13187e
-    PhysicsOutlines: []
-*/
