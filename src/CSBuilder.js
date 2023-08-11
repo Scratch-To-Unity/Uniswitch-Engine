@@ -57,7 +57,6 @@ function addScript(sprite) {
             if (sprite.isStage) {
                 globalLists.push(name);
             }
-
         });
     }
 
@@ -389,7 +388,7 @@ function addBlock(blockID) {
         return l;
     }
     if (block.opcode == "control_repeat") {
-        if (block.inputs.SUBSTACK != undefined || block.inputs.TIMES != "") {
+        if (block.inputs.SUBSTACK == undefined || block.inputs.TIMES == "") {
             l += addBlock(block.next);
             return l;
         }
