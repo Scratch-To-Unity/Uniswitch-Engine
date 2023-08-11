@@ -738,10 +738,10 @@ function addBlock(blockID) {
                     l += "0f";
                 } else {
                     if (startsWithNumber(inputValue.toString())) {
-                        l += inputValue;
-                        if (containsDot(inputValue)) {
-                            l += "f";
-                        }
+                        l += inputValue + 'f';
+                        // if (containsDot(inputValue)) {
+                        //     l += "f";
+                        // }
                     } else {
                         if (property == "BROADCAST_INPUT") {
                             l += '"Message' + standardizeName(value[1][1]) + '"';
@@ -771,10 +771,10 @@ function addBlock(blockID) {
                         l += "0f";
                     } else {
                         if (startsWithNumber(inputValue.toString())) {
-                            l += inputValue;
-                            if (containsDot(inputValue)) {
-                                l += "f";
-                            }
+                            l += inputValue + 'f';
+                            // if (containsDot(inputValue)) {
+                            //     l += "f";
+                            // }
                         } else {
                             if (property == "BROADCAST_INPUT") {
                                 l += '"Message' + standardizeName(value[1][1]) + '"';

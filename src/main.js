@@ -47,7 +47,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 //TO DO:
 //next template : v15
-//if standardized name is null, replace it by a random name stored in a linked-list
+//change layer name to front and back(I think)
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
