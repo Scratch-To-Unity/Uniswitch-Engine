@@ -1,6 +1,4 @@
-﻿let scratchProjectJSON = "";
-
-let scratchProject =  null;
+﻿let scratchProject =  null;
 
 let projectName = "untitled";
 
@@ -101,9 +99,6 @@ async function convert() {
     SetStatus("Extracting images...");
     //Get images, sounds, and project's JSON
     const scratchFiles = await extractFilesFromScratchProject(fileInput); //Action 3
-    console.error("hey");
-    scratchProject = JSON.parse(scratchProjectJSON); //Action 4
-    addProgress();
     workspace = workspace.concat(scratchFiles);
 
     unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
@@ -130,7 +125,7 @@ async function getProjectFromID(ID){
         // May be called periodically with progress updates.
         onProgress: (type, loaded, total) => {
             // type is 'metadata', 'project', 'assets', or 'compress'
-            console.log(type, loaded / total);
+            //console.log(type, loaded / total);
             if (previousType != type) {
                 previousType = type;
                 previousPercent = 0;

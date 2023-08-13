@@ -13,9 +13,9 @@ function handleSprite(sprite) {
     //fileID : 21300000 for bitmap
     //fileID : 3286163911610860551 for SVG
     var fileID = "21300000";
-    if (sprite.costumes[sprite.currentCostume].dataFormat == "svg") {
-        fileID = "3286163911610860551";
-    }
+    // if (sprite.costumes[sprite.currentCostume].dataFormat == "svg") {
+    //     fileID = "3286163911610860551";
+    // }
     addGameObject(sprite.name, stringToGUID(sprite.costumes[sprite.currentCostume].assetId), sprite.x, sprite.y, (sprite.visible * 1).toString(), stringToGUID(sprite.name + "Scr"), sprite.layerOrder, sprite.size, sprite.direction, fileID, sprite.costumes);
     addScript(sprite);
 }
@@ -52,9 +52,9 @@ function addGameObject(spriteName, costumeGUID, px, py, isShown, scriptGUID, lay
     costumes.forEach((costume, index) => {
         unityGameScene += "\n  - name: " + costume.name;
         var fileID = "21300000";
-        if (costume.dataFormat == "svg") {
-            fileID = "3286163911610860551";
-        }
+        // if (costume.dataFormat == "svg") {
+        //     fileID = "3286163911610860551";
+        // }
         unityGameScene += "\n    sprite: {fileID: " + fileID + ", guid: " + stringToGUID(costume.assetId) + ", type: 3}";
         unityGameScene += "\n    index: " + index;
     });
