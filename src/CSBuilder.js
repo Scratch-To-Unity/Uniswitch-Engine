@@ -417,6 +417,9 @@ function addBlock(blockID) {
         l += ");";
         l += "for (int " + iteration + " = 0; " + iteration + " < " + times + "; " + iteration + "++){"
         l += addBlock(block.inputs.SUBSTACK[1]);
+        if(!warp){
+            l += delay;
+        }
         l += "}";
         l += addBlock(block.next);
         return l;

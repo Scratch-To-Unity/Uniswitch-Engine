@@ -100,24 +100,24 @@ async function convert() {
 
     SetStatus("Extracting images...");
     //Get images, sounds, and project's JSON
-    await extractImagesFromZippedFile(fileInput, function (images) { //Action 3
-        scratchProject = JSON.parse(scratchProjectJSON); //Action 4
-        addProgress();
-        workspace = workspace.concat(images);
+    const scratchFiles = await extractFilesFromScratchProject(fileInput); //Action 3
+    console.error("hey");
+    scratchProject = JSON.parse(scratchProjectJSON); //Action 4
+    addProgress();
+    workspace = workspace.concat(scratchFiles);
 
-        unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
+    unityGameScene = arrayBufferToString(workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data);
 
-        SetStatus("Generating unity scene...");
-        
-        handleSprites(scratchProject);  //Action 5
-        workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
+    SetStatus("Generating unity scene...");
+    
+    handleSprites(scratchProject);  //Action 5
+    workspace.find(obj => obj.name === "Template Scratch/Assets/Scenes/game.unity").data = stringToArrayBuffer(unityGameScene);
 
-        SetStatus("Zipping unity folder...");
-        console.log("progress until here : " + progress);
-        console.log(workspace);
-        estimatedWork += workspace.length;
-        zipAndDownloadFiles(workspace);  //Action 6
-    });
+    SetStatus("Zipping unity folder...");
+    console.log("progress until here : " + progress);
+    console.log(workspace);
+    estimatedWork += workspace.length;
+    zipAndDownloadFiles(workspace);  //Action 6
 }
 
 async function getProjectFromID(ID){
