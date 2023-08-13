@@ -121,7 +121,7 @@
         },
         "data_insertatlist": {
             "function": ".Insert(item: ",
-            "separator": ", index: (int)",
+            "separator": ", index: (float)",
             "close": ");",
             "delay": false,
             "after": ""
@@ -134,9 +134,9 @@
             "after": ""
         },
         "data_itemoflist": {
-            "function": "[(int)",
+            "function": "",
             "separator": "",
-            "close": "-1]",
+            "close": ")",
             "delay": false,
             "after": ""
         },

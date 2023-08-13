@@ -613,6 +613,10 @@ function addBlock(blockID) {
                 l += "() {yield return null;";
                 break;
             case "LIST":
+                if(block.opcode == "data_itemoflist")
+                {
+                    l += "ElementOf(";
+                }
                 var name = standardizeName(value[0]);
                 if (globalLists.includes(name)) {
                     l += "GlobalVariables.";
@@ -751,7 +755,17 @@ function addBlock(blockID) {
                             if (inputValue == "") {
                                 l += "";
                             } else {
-                                l += '"' + value[1][1] + '"';
+                                if(inputValue = "Infinity")
+                                {
+                                    l += "Mathf.Infinity";
+                                }else{
+                                    if(inputValue = "-Infinity"){
+                                        l += "-Mathf.Infinity";
+                                    }else{
+                                        l += '"' + value[1][1] + '"';
+                                    }
+                                }
+                                
                             }
                         }
                     }
