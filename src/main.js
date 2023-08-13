@@ -46,6 +46,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //TO DO:
 //next template : v15
 //change layer name to front and back(I think)
+//change penColor to public
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
