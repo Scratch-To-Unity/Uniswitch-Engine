@@ -35,7 +35,6 @@ The converter actually doesn't support :
  - some motion blocks
  - say, think, ask
  - graphic effects
- - vector text in costumes
  - sounds
  - some event blocks
  - color detection
