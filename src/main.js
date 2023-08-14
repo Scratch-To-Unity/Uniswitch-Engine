@@ -48,6 +48,11 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //change layer name to front and back(I think)
 //change penColor to public
 
+//1 - 1 = 0
+//1 - 0 = 1
+//0 - 1 = -1
+//custom function I guess
+
 //----------------------------------------------------MAIN--------------------------------------------------------
 
 async function convert() {
@@ -203,7 +208,7 @@ function containsDot(str) {
 
 function startsWithNumber(str) {
     //return /*(/^\d/.test(str) || str[0] == "-") &&*/ !/[^0-9]/.test(str) || (str[0] == "-" && !/[^0-9]/.test(str[1])) && str.length < 20;
-    return !/[^0-9,-.]/.test(str) && str.length < 20;
+    return !/[^0-9,-.]/.test(str) && str.length < 20 && str[0] != ',';
 }
 
 function unknownBlock(skipped, library) {

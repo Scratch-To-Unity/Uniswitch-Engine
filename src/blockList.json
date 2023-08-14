@@ -78,9 +78,9 @@
             "after": ""
         },
         "control_wait": {
-            "function": "yield return new WaitForSecondsRealtime(",
+            "function": "yield return new WaitForSecondsRealtime(ToFloat(",
             "separator": "",
-            "close": ");",
+            "close": "));",
             "delay": false,
             "after": ""
         },
@@ -99,9 +99,9 @@
             "after": ""
         },
         "data_changevariableby": {
-            "function": " + (float)",
+            "function": " + ToFloat(",
             "separator": "",
-            "close": ";",
+            "close": ");",
             "delay": false,
             "after": ""
         },
@@ -113,16 +113,16 @@
             "after": ""
         },
         "data_deleteoflist": {
-            "function": ".RemoveAt(",
+            "function": ".RemoveAt(ToInt(",
             "separator": "",
-            "close": ");",
+            "close": "));",
             "delay": false,
             "after": ""
         },
         "data_insertatlist": {
             "function": ".Insert(item: ",
-            "separator": ", index: (float)",
-            "close": ");",
+            "separator": ", index: ToInt(",
+            "close": "));",
             "delay": false,
             "after": ""
         },
@@ -134,9 +134,9 @@
             "after": ""
         },
         "data_itemoflist": {
-            "function": "",
+            "function": ", ToFloat(",
             "separator": "",
-            "close": ")",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -155,9 +155,9 @@
             "after": ""
         },
         "data_replaceitemoflist": {
-            "function": "[(int)",
-            "separator": "-1] = ",
-            "close": ";",
+            "function": ", ToFloat(",
+            "separator": "), ",
+            "close": ");",
             "delay": false,
             "after": ""
         },
@@ -197,7 +197,7 @@
             "after": "yield return null;}"
         },
         "looks_changesizeby": {
-            "function": "ChangeSize((float)",
+            "function": "ChangeSize(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -253,7 +253,7 @@
             "after": ""
         },
         "looks_setsizeto": {
-            "function": "SetSize((float)",
+            "function": "SetSize(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -281,14 +281,14 @@
             "after": ""
         },
         "motion_changexby": {
-            "function": "ChangeX((float)",
+            "function": "ChangeX(",
             "separator": "",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_changeyby": {
-            "function": "ChangeY((float)",
+            "function": "ChangeY(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -309,21 +309,21 @@
             "after": ""
         },
         "motion_gotoxy": {
-            "function": "GoToXY((float)",
-            "separator": ", (float)",
+            "function": "GoToXY(",
+            "separator": ", ",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_movesteps": {
-            "function": "MoveSteps((float)",
+            "function": "MoveSteps(",
             "separator": "",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_pointindirection": {
-            "function": "SetRotation((float)",
+            "function": "SetRotation(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -344,28 +344,28 @@
             "after": ""
         },
         "motion_setx": {
-            "function": "SetX((float)",
+            "function": "SetX(",
             "separator": "",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_sety": {
-            "function": "SetY((float)",
+            "function": "SetY(",
             "separator": "",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_turnleft": {
-            "function": "TurnLeft((float)",
+            "function": "TurnLeft(",
             "separator": "",
             "close": ");",
             "delay": false,
             "after": ""
         },
         "motion_turnright": {
-            "function": "TurnRight((float)",
+            "function": "TurnRight(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -386,9 +386,9 @@
             "after": ""
         },
         "operator_add": {
-            "function": "((float)",
-            "separator": "+(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")+ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -401,15 +401,15 @@
         },
         "operator_contains": {
             "function": "",
-            "separator": ".Contains((string)",
-            "close": ")",
+            "separator": ".Contains(",
+            "close": ".ToString())",
             "delay": false,
             "after": ""
         },
         "operator_divide": {
-            "function": "((float)",
-            "separator": "/(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")/ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -421,9 +421,9 @@
             "after": ""
         },
         "operator_gt": {
-            "function": "((float)",
-            "separator": ">(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")>ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -436,30 +436,30 @@
         },
 
         "operator_length": {
-            "function": "((string)",
+            "function": "(",
             "separator": "",
-            "close": ").Length",
+            "close": ".ToString()).Length",
             "delay": false,
             "after": ""
         },
         "operator_letter_of": {
-            "function": "LetterOf((int)",
-            "separator": ", (string)",
+            "function": "LetterOf(",
+            "separator": ", ",
             "close": ")",
             "delay": false,
             "after": ""
         },
         "operator_lt": {
-            "function": "((float)",
-            "separator": "<(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")<ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_mathop": {
             "function": "",
             "separator": "",
-            "close": ")",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -478,16 +478,16 @@
             "after": ""
         },
         "operator_mod": {
-            "function": "((float)",
-            "separator": "%(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")%ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_multiply": {
-            "function": "((float)",
-            "separator": "*(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")*ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -506,23 +506,23 @@
             "after": ""
         },
         "operator_random": {
-            "function": "UnityEngine.Random.Range((float)",
-            "separator": ", (float)",
-            "close": ")",
+            "function": "UnityEngine.Random.Range(ToFloat(",
+            "separator": "), ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_round": {
-            "function": "Mathf.Round((float)",
+            "function": "Mathf.Round(ToFloat(",
             "separator": "",
-            "close": ")",
+            "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_subtract": {
-            "function": "((float)",
-            "separator": "-(float)",
-            "close": ")",
+            "function": "(ToFloat(",
+            "separator": ")-ToFloat(",
+            "close": "))",
             "delay": false,
             "after": ""
         },
@@ -534,9 +534,9 @@
             "after": ""
         },
         "pen_changePenSizeBy": {
-            "function": "penWidth += (float)",
+            "function": "penWidth += ToFloat(",
             "separator": "",
-            "close": ";",
+            "close": ");",
             "delay": false,
             "after": ""
         },
@@ -569,16 +569,16 @@
             "after": ""
         },
         "pen_setPenColorToColor": {
-            "function": "penColor = HexToColor((string)",
+            "function": "penColor = HexToColor(",
             "separator": "",
-            "close": ");",
+            "close": ".ToString());",
             "delay": false,
             "after": ""
         },
         "pen_setPenSizeTo": {
-            "function": "penWidth = (float)",
+            "function": "penWidth = ToFloat(",
             "separator": "",
-            "close": ";",
+            "close": ");",
             "delay": false,
             "after": ""
         },

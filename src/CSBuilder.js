@@ -394,10 +394,10 @@ function addBlock(blockID) {
         loopIdx++;
         var times = "TIMES" + loopIdx;
         var iteration = "ITERATION" + loopIdx;
-        l += "int " + times + " = Mathf.RoundToInt((float)";
+        l += "int " + times + " = ToInt(";
         //yes, I'm re-writing the input system :/
         if (block.inputs.TIMES[0] == 1) {
-            l += block.inputs.TIMES[1][1];
+            l += block.inputs.TIMES[1][1] + 'f';
         } else if (block.inputs.TIMES[0] == 2) {
             l += addBlock(block.inputs.TIMES[1]);
         } else {
@@ -406,6 +406,8 @@ function addBlock(blockID) {
                     var name = standardizeName(block.inputs.TIMES[1][1]);
                     if (doesArrayContainName(globalVariables, name)) {
                         l += "GlobalVariables.";
+                    }else{
+                        l += "this.";
                     }
                     l += name;
                 }
@@ -498,7 +500,7 @@ function addBlock(blockID) {
                         unknownBlock("math operator", "field");
                         break;
                 }
-                l += "(float)";
+                l += "ToFloat(";
                 break;
             case "TO":
                 if (value[0][0] != "_") {
@@ -617,9 +619,15 @@ function addBlock(blockID) {
                 {
                     l += "ElementOf(";
                 }
+                if(block.opcode == "data_replaceitemoflist")
+                {
+                    l += "ReplaceItem(";
+                }
                 var name = standardizeName(value[0]);
                 if (globalLists.includes(name)) {
                     l += "GlobalVariables.";
+                }else{
+                    l += "this.";
                 }
                 l += name;
                 break;
@@ -755,17 +763,7 @@ function addBlock(blockID) {
                             if (inputValue == "") {
                                 l += "";
                             } else {
-                                if(inputValue = "Infinity")
-                                {
-                                    l += "Mathf.Infinity";
-                                }else{
-                                    if(inputValue = "-Infinity"){
-                                        l += "-Mathf.Infinity";
-                                    }else{
-                                        l += '"' + value[1][1] + '"';
-                                    }
-                                }
-                                
+                                l += '"' + value[1][1] + '"';                                
                             }
                         }
                     }
@@ -819,6 +817,8 @@ function addBlock(blockID) {
                         var name = standardizeName(value[1][1]);
                         if (doesArrayContainName(globalVariables, name)) {
                             l += "GlobalVariables.";
+                        }else{
+                            l += "this.";
                         }
                         //adding variable name as an argument
                         l += name;
@@ -841,6 +841,8 @@ function addBlock(blockID) {
                     var name = standardizeName(value[1][1]);
                     if (doesArrayContainName(globalVariables, name)) {
                         l += "GlobalVariables.";
+                    }else{
+                        l += "this.";
                     }
                     //adding variable name as an argument
                     l += name;
