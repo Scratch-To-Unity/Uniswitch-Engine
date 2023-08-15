@@ -28,5 +28,5 @@ jobs:
           ftpUsername: ${{ secrets.FREE_FTP_USERNAME }}
           ftpPassword: ${{ secrets.FREE_FTP_PASSWORD }}
           ftpHostname: ${{ secrets.FREE_FTP_HOST }}
-          src: 'src/'
+          src: '/src'
           dest: '/Uniswitch'
