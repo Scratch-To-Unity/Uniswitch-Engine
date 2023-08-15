@@ -49,7 +49,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //1 - 1 = 0
 //1 - 0 = 1
 //0 - 1 = -1
-//custom function I guess
+//custom function I guess for boolean subtract
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
