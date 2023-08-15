@@ -20,7 +20,7 @@ jobs:
           # Force SSL encryption
           forceSsl: false
           # Local directory
-          localDir: './src'
+          localDir: '/src'
           # Remote directory
           remoteDir: './Uniswitch'
         
