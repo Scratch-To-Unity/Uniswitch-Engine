@@ -309,7 +309,7 @@ function addVariables(sprite, static = "") {
                 }
             });
 
-            const formattedString = `{ ${formattedArray.join(', ')} }`;
+            const formattedString = `{ ${formattedArray.join(', ')}     }`;
             l += formattedString;
         }
         l += ";";

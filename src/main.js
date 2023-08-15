@@ -10,7 +10,7 @@ let endTime = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v14.zip";
+const templatePath = "Templates/Template Scratch v15.zip";
 const blockLibPath = "blockList.json";
 
 
@@ -27,7 +27,7 @@ const formatCode = true;
 
 //utilities
 const delay = "yield return new WaitForEndOfFrame();";
-const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib"];
+const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth"];
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -44,9 +44,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 
 //TO DO:
-//next template : v15
-//change layer name to front and back(I think)
-//change penColor to public
+//next template : v16
 
 //1 - 1 = 0
 //1 - 0 = 1
