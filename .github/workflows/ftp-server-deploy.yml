@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: ftp-action
         # You may pin to the exact commit or the version.
-        # uses: sebastianpopp/ftp-action@eb75c5cb29d23ee4a729720a27dfb66403cb0f6d
-        uses: sebastianpopp/ftp-action@v2.0.0
+        uses: sebastianpopp/ftp-action@ca3f8d253d20ddd6aa658f8cb27fc847fd610882
+        # uses: sebastianpopp/ftp-action@v2.0.0
         with:
           # FTP host
           host: ${{ secrets.FREE_FTP_HOST }}
