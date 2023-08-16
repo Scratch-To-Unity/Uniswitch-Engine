@@ -94,9 +94,9 @@ function addScript(sprite) {
     startBlocks.forEach(blockID => {
         var functionName = "Start" + removeNonLetters(blockID);
         currentFunctionName = functionName;
-        code += "IEnumerator " + functionName + "(){yield return null;";
+        code += "IEnumerator " + functionName + "(){";
         code += addBlock(blockList[blockID].next);
-        code += "}";
+        code += "yield return null;}";
     });
 
     //adding custom blocks and events receivers
