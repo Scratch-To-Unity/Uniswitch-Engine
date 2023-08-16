@@ -935,3 +935,30 @@ function addBlock(blockID) {
                                 //                                                      //
                                 //------------------------------------------------------//
 
+function addNewlines(str) {
+    const specialChars = ['{', '}', ';'];
+    let result = '';
+    const spacing = "\n";
+    let isInQuotes = false;
+
+    for (var i = 0; i < str.length; i++) {
+        var char = str.charAt(i);
+        if (specialChars.includes(char) && !isInQuotes) {
+            if (char == "{") {
+                spacing += "    ";
+            } else if (char == "}") {
+                spacing = spacing.slice(0, -4);
+                result = result.slice(0, -4);
+            } else if(char == '"')
+            {
+                isInQuotes = !isInQuotes;
+            }
+            result += char + spacing;
+            
+        } else {
+            result += char;
+        }
+    }
+
+    return result;
+}

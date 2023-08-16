@@ -232,30 +232,6 @@ function removeNonLetters(inputString) {
     return inputString.replace(/[^a-zA-Z]/g, '');
 }
 
-function addNewlines(str) {
-    var specialChars = ['{', '}', ';'];
-    var result = '';
-    var spacing = "\n";
-
-    for (var i = 0; i < str.length; i++) {
-        var char = str.charAt(i);
-        if (specialChars.includes(char)) {
-            if (char == "{") {
-                spacing += "    ";
-            } else if (char == "}") {
-                spacing = spacing.slice(0, -4);
-                result = result.slice(0, -4);
-            }
-            result += char + spacing;
-            
-        } else {
-            result += char;
-        }
-    }
-
-    return result;
-}
-
 function cutStringIfLong(string) {
     if (string.length > 32) {
         string = string.substring(string.length - 32);
