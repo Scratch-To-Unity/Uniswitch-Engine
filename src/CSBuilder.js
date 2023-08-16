@@ -155,10 +155,11 @@ function addScript(sprite) {
 
                 //Add arguments
                 code += " {";
+                
+                code += addBlock(block.next);
                 if (!warp) {
                     code += "yield return null;";
                 }
-                code += addBlock(block.next);
                 code += "}";
             }
             if (block.opcode == "event_whenbroadcastreceived") {
@@ -180,7 +181,7 @@ function addScript(sprite) {
                 code += "public IEnumerator Message";
                 code += broadcastName;
                 usedBroadcasts.push(broadcastName);
-                code += "() {yield return null;";
+                code += "() {";
                 //Add all the messages
                 for (var i = 0; i < broadcastNames.length; i++) {
                     if (broadcastNames[i] == broadcastName) {
@@ -189,7 +190,7 @@ function addScript(sprite) {
                         code += "());";
                     }
                 }
-                code += "}";
+                code += "yield return null;}";
             }
         }
     }
@@ -612,7 +613,7 @@ function addBlock(blockID) {
             case "BROADCAST_OPTION":
                 l += "public IEnumerator Message"
                 l += standardizeName(blockID);
-                l += "() {yield return null;";
+                l += "() {";
                 break;
             case "LIST":
                 if(block.opcode == "data_itemoflist")

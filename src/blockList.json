@@ -187,7 +187,7 @@
             "separator": "",
             "close": "",
             "delay": false,
-            "after": "}"
+            "after": "yield return null;}"
         },
         "event_whenflagclicked": {
             "function": "IEnumerator MainThread(){",
