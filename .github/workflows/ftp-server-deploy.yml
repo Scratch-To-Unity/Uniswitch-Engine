@@ -4,7 +4,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Deploy to ftp server
     steps:
       - name: ftp-action
