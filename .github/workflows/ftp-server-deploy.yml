@@ -18,7 +18,7 @@ jobs:
           # FTP password
           password: ${{ secrets.FREE_FTP_PASSWORD }}
           # Force SSL encryption
-          forceSsl: true
+          forceSsl: false
           # Local directory
           localDir: '.'
           # Remote directory
