@@ -22,5 +22,5 @@ jobs:
           # Local directory
           localDir: '.'
           # Remote directory
-          remoteDir: 'http://10boutons.free.fr/Uniswitch'
+          remoteDir: '.'
         
