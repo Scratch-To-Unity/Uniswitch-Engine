@@ -45,6 +45,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 //TO DO:
 //next template : v16
+//Add "stop other coroutines" in ScratchLib 
 
 //1 - 1 = 0
 //1 - 0 = 1

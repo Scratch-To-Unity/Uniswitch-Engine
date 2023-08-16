@@ -24,7 +24,7 @@ async function convertSvgToPng(svgString, x, y) {
     // canvas.height = 360 * multiplier;
 
     // Draw the SVG image onto the canvas
-    //context.drawImage(img, x * multiplier, y * multiplier);
+    // context.drawImage(img, x * multiplier, y * multiplier, img.width * multiplier, img.height * multiplier);
     context.drawImage(img, 0, 0, img.width * multiplier, img.height * multiplier);
 
     // Convert canvas to Blob using createImageBitmap

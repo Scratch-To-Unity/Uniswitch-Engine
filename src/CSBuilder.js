@@ -572,9 +572,9 @@ function addBlock(blockID) {
                         if (warp) {
                             l += 'return;';
                         } else {
-                            l += 'StopCoroutine(';
+                            l += 'StopCoroutine("Function';
                             l += currentFunctionName;
-                            l += '());';
+                            l += '");';
                         }
                         break;
                     default:
