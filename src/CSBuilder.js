@@ -865,6 +865,8 @@ function addBlock(blockID) {
     if (block.opcode == "control_repeat_until") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
+        }else{
+            l += 'false';
         }
         l += ") {";
         if (block.inputs.SUBSTACK != null) {
@@ -874,6 +876,8 @@ function addBlock(blockID) {
     if (block.opcode == "control_if_else") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
+        }else{
+            l += 'false';
         }
         l += ") {";
         if (block.inputs.SUBSTACK != null) {
@@ -887,6 +891,8 @@ function addBlock(blockID) {
     if (block.opcode == "control_if") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
+        }else{
+            l += 'false';
         }
         l += ") {";
         if (block.inputs.SUBSTACK != null) {
