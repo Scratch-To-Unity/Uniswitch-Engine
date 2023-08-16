@@ -20,7 +20,7 @@ jobs:
           # Force SSL encryption
           forceSsl: false
           # Local directory
-          localDir: '.'
+          localDir: 'src'
           # Remote directory
-          remoteDir: './Uniswitch'
+          remoteDir: 'http://10boutons.free.fr/Uniswitch'
         
