@@ -166,7 +166,7 @@ async function extractFilesFromScratchProject(fileInput) {
                         files.push(imageMeta);
                     })
                     break;
-                case "wav":
+                /*case "wav":
                     file.async('base64').then(function (base64) {
                         var sound = {
                             name: "Template Scratch/Assets/Sounds/" + relativePath,
@@ -180,7 +180,7 @@ async function extractFilesFromScratchProject(fileInput) {
                         };
                         files.push(soundMeta);
                     })
-                    break;
+                    break;*/
                 case "svg":
                     await file.async('text').then(async function(svgString){ 
                         const convertedImage = await convertSvgToPng(svgString);

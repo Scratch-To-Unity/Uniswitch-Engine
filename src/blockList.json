@@ -401,7 +401,7 @@
         },
         "operator_add": {
             "function": "(ToFloat(",
-            "separator": ")+ToFloat(",
+            "separator": ") + ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -422,28 +422,28 @@
         },
         "operator_divide": {
             "function": "(ToFloat(",
-            "separator": ")/ToFloat(",
+            "separator": ") / ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_equals": {
             "function": "((",
-            "separator": ").ToString()==(",
+            "separator": ").ToString() == (",
             "close": ").ToString())",
             "delay": false,
             "after": ""
         },
         "operator_gt": {
             "function": "(ToFloat(",
-            "separator": ")>ToFloat(",
+            "separator": ") > ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_join": {
             "function": "((",
-            "separator": ").ToString()+(",
+            "separator": ").ToString() + (",
             "close": ").ToString())",
             "delay": false,
             "after": ""
@@ -464,7 +464,7 @@
         },
         "operator_lt": {
             "function": "(ToFloat(",
-            "separator": ")<ToFloat(",
+            "separator": ") < ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -492,14 +492,14 @@
         },
         "operator_mod": {
             "function": "(ToFloat(",
-            "separator": ")%ToFloat(",
+            "separator": ") % ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_multiply": {
             "function": "(ToFloat(",
-            "separator": ")*ToFloat(",
+            "separator": ") * ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -513,7 +513,7 @@
         },
         "operator_or": {
             "function": "(",
-            "separator": "||",
+            "separator": " || ",
             "close": ")",
             "delay": false,
             "after": ""
@@ -534,7 +534,7 @@
         },
         "operator_subtract": {
             "function": "(ToFloat(",
-            "separator": ")-ToFloat(",
+            "separator": ") - ToFloat(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -578,6 +578,27 @@
             "function": "PenUp()",
             "separator": "",
             "close": ";",
+            "delay": false,
+            "after": ""
+        },
+        "motion_glideto": {
+            "function": "yield return StartCoroutine(GlideToTarget(",
+            "separator": ", ",
+            "close": "));",
+            "delay": false,
+            "after": ""
+        },
+        "motion_glidesecstoxy": {
+            "function": "yield return StartCoroutine(GlideToXY(",
+            "separator": ", ",
+            "close": "));",
+            "delay": false,
+            "after": ""
+        },
+        "motion_glideto_menu": {
+            "function": "",
+            "separator": "",
+            "close": "",
             "delay": false,
             "after": ""
         },

@@ -495,22 +495,22 @@ function addBlock(blockID) {
                         l += "Ceil(";
                         break;
                     case "sin":
-                        l += "Sin(Mathf.Deg2Rad *";
+                        l += "Sin(Mathf.Deg2Rad * ";
                         break;
                     case "cos":
-                        l += "Cos(Mathf.Deg2Rad *";
+                        l += "Cos(Mathf.Deg2Rad * ";
                         break;
                     case "tan":
-                        l += "Tan(Mathf.Deg2Rad *";
+                        l += "Tan(Mathf.Deg2Rad * ";
                         break;
                     case "asin":
-                        l += "Asin(Mathf.Deg2Rad *";
+                        l += "Asin(Mathf.Deg2Rad * ";
                         break;
                     case "acos":
-                        l += "Acos(Mathf.Deg2Rad *";
+                        l += "Acos(Mathf.Deg2Rad * ";
                         break;
                     case "atan":
-                        l += "Atan(Mathf.Deg2Rad *";
+                        l += "Atan(Mathf.Deg2Rad * ";
                         break;
                     case "ln":
                         l += "Log(";
@@ -533,15 +533,18 @@ function addBlock(blockID) {
             case "TO":
                 if (value[0][0] != "_") {
                     //it's a sprite name
-                    l += '"sprite", ';
-                    l += '"' + value[0] + '"';
+                    l += 'Target.sprite';
+                    if(block.opcode == "motion_goto_menu")
+                    {
+                        l += ', "' + value[0] + '"';
+                    }
                 } else {
                     switch (value[0]) {
                         case "_random_":
-                            l += '"random"';
+                            l += 'Target.random';
                             break;
                         case "_mouse_":
-                            l += '"mouse"';
+                            l += 'Target.mouse';
                             break;
                         default:
                             unknownBlock("goto menu", "field");
@@ -552,12 +555,12 @@ function addBlock(blockID) {
             case "DISTANCETOMENU":
                 if (value[0][0] != "_") {
                     //it's a sprite name
-                    l += '"sprite", ';
+                    l += 'Target.sprite, ';
                     l += '"' + value[0] + '"';
                 } else {
                     switch (value[0]) {
                         case "_mouse_":
-                            l += '"mouse"';
+                            l += 'Target.mouse';
                             break;
                         default:
                             unknownBlock("distanceTo menu", "field");
@@ -568,12 +571,12 @@ function addBlock(blockID) {
             case "TOWARDS":
                 if (value[0][0] != "_") {
                     //it's a sprite name
-                    l += '"sprite", ';
+                    l += 'Target.sprite, ';
                     l += '"' + value[0] + '"';
                 } else {
                     switch (value[0]) {
                         case "_mouse_":
-                            l += '"mouse"';
+                            l += 'Target.mouse';
                             break;
                         default:
                             unknownBlock("towards menu", "field");
@@ -674,15 +677,15 @@ function addBlock(blockID) {
             case "TOUCHINGOBJECTMENU":
                 if (value[0][0] != "_") {
                     //it's a sprite name
-                    l += '"sprite", ';
+                    l += 'Target.sprite, ';
                     l += '"' + value[0] + '"';
                 } else {
                     switch (value[0]) {
                         case "_edge_":
-                            l += '"_edge_"';
+                            l += 'Target.edge';
                             break;
                         case "_mouse_":
-                            l += '"mouse"';
+                            l += 'Target.mouse';
                             break;
                         default:
                             unknownBlock("touching object menu", "field");
@@ -976,14 +979,16 @@ function addNewlines(str) {
             } else if (char == "}") {
                 spacing = spacing.slice(0, -4);
                 result = result.slice(0, -4);
-            } else if(char == '"')
-            {
-                isInQuotes = !isInQuotes;
             }
             result += char + spacing;
             
         } else {
             result += char;
+            
+        }
+        if(char == '"')
+        {
+            isInQuotes = !isInQuotes;
         }
     }
 

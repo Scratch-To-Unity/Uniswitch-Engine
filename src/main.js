@@ -26,7 +26,7 @@ const customTranslations = [];
 const formatCode = true;
 
 //utilities
-const delay = "yield return new WaitForEndOfFrame();";
+const delay = "yield return null;";
 const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth"];
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -47,7 +47,6 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //next template : v17
 //Add "stop other coroutines" in ScratchLib 
 //Set the line prefab to active
-//Clamp position to avoid errors when moving
 
 // private void Update()
 // {
