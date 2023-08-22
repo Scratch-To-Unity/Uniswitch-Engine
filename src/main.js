@@ -10,7 +10,7 @@ let endTime = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v15.zip";
+const templatePath = "Templates/Template Scratch v16.zip";
 const blockLibPath = "blockList.json";
 
 
@@ -44,8 +44,20 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 
 //TO DO:
-//next template : v16
+//next template : v17
 //Add "stop other coroutines" in ScratchLib 
+//Set the line prefab to active
+//Clamp position to avoid errors when moving
+
+// private void Update()
+// {
+//     for (int i = 0; i < 1000; i++)
+//     {
+//         Color randomColor = UnityEngine.Random.ColorHSV(0, 1, 0, 1, 0, 1, 0, 1);
+//         //print(randomColor);
+//         DrawLineMesh(new Vector2(UnityEngine.Random.Range(-240, 240), UnityEngine.Random.Range(-180, 180)), new Vector2(UnityEngine.Random.Range(-240, 240), UnityEngine.Random.Range(-180, 180)), randomColor, UnityEngine.Random.Range(1, 50));
+//     }
+// }
 
 //1 - 1 = 0
 //1 - 0 = 1

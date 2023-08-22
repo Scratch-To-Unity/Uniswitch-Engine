@@ -161,6 +161,20 @@
             "delay": false,
             "after": ""
         },
+        "event_whenthisspriteclicked": {
+            "function": "",
+            "separator": "",
+            "close": "",
+            "delay": false,
+            "after": ""
+        },
+        "event_whenkeypressed": {
+            "function": "",
+            "separator": "",
+            "close": "",
+            "delay": false,
+            "after": ""
+        },
         "data_setvariableto": {
             "function": " = ",
             "separator": "",
@@ -434,7 +448,6 @@
             "delay": false,
             "after": ""
         },
-
         "operator_length": {
             "function": "(",
             "separator": "",

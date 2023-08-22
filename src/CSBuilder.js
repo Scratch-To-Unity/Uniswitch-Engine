@@ -23,10 +23,11 @@ function addScript(sprite) {
     code += "using System.Collections;";
     code += "using System.Collections.Generic;";
     code += "using UnityEngine;";
+    code += "using Scratch;";
     code += "\n";
     code += "public class ";
     code += standardizeName(sprite.name) + "Script";
-    code += " : ScratchLib ";
+    code += " : ScratchSprite ";
     code += "{";
     code += "//Created automatically by Scratch to Unity Converter;"
     code += "//Made by @scratchtomv;"
@@ -89,6 +90,39 @@ function addScript(sprite) {
         }
     }
     code += "}}";
+
+    code += "private void Update(){";
+    if (sprite.isStage) {
+        code += "GlobalVariables.timer += Time.deltaTime;";
+    }
+    for (let blockID in blockList) {
+        let currentBlock = blockList[blockID];
+        if (currentBlock.topLevel == true) {
+            if (currentBlock.opcode == "event_whenkeypressed") {
+                code += 'if(GetKey("';
+                code += currentBlock.fields.KEY_OPTION[0]
+                code += '")){'
+                startBlocks.push(blockID);
+                var functionName = "Start" + removeNonLetters(blockID);
+                code += "StartCoroutine(" + functionName + "());"
+                code += "}";
+            }
+        }
+    }
+    code += '}';
+
+    code += "private void OnMouseDown() {"
+    for (let blockID in blockList) {
+        let currentBlock = blockList[blockID];
+        if (currentBlock.topLevel == true) {
+            if (currentBlock.opcode == "event_whenthisspriteclicked") {
+                startBlocks.push(blockID);
+                var functionName = "Start" + removeNonLetters(blockID);
+                code += "StartCoroutine(" + functionName + "());"
+            }
+        }
+    }
+    code += '}';
 
     //adding all the start coroutines
     startBlocks.forEach(blockID => {
@@ -194,13 +228,6 @@ function addScript(sprite) {
             }
         }
     }
-
-    //adding update function
-    code += "private void Update() {";
-    if (sprite.isStage) {
-        code += "GlobalVariables.timer += Time.deltaTime;";
-    }
-    code += "}"
 
     //closing sprite's script class
     code += "}";
@@ -468,22 +495,22 @@ function addBlock(blockID) {
                         l += "Ceil(";
                         break;
                     case "sin":
-                        l += "Sin(";
+                        l += "Sin(Mathf.Deg2Rad *";
                         break;
                     case "cos":
-                        l += "Cos(";
+                        l += "Cos(Mathf.Deg2Rad *";
                         break;
                     case "tan":
-                        l += "Tan(";
+                        l += "Tan(Mathf.Deg2Rad *";
                         break;
                     case "asin":
-                        l += "Asin(";
+                        l += "Asin(Mathf.Deg2Rad *";
                         break;
                     case "acos":
-                        l += "Acos(";
+                        l += "Acos(Mathf.Deg2Rad *";
                         break;
                     case "atan":
-                        l += "Atan(";
+                        l += "Atan(Mathf.Deg2Rad *";
                         break;
                     case "ln":
                         l += "Log(";
@@ -938,7 +965,7 @@ function addBlock(blockID) {
 function addNewlines(str) {
     const specialChars = ['{', '}', ';'];
     let result = '';
-    const spacing = "\n";
+    let spacing = "\n";
     let isInQuotes = false;
 
     for (var i = 0; i < str.length; i++) {
