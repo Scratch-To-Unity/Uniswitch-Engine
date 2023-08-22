@@ -42,8 +42,8 @@ The converter actually doesn't support :
  - color detection
  - variable monitors
  - turbo mode
- - rounded pen strokes
  - emojis in variable names
+ - costumes pivot point
 
 The converter only support .sb3 files.
 
