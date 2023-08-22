@@ -10,7 +10,7 @@ let endTime = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v16.zip";
+const templatePath = "Templates/Template Scratch v17.zip";
 const blockLibPath = "blockList.json";
 
 
@@ -44,9 +44,8 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 
 //TO DO:
-//next template : v17
-//Add "stop other coroutines" in ScratchLib 
-//Set the line prefab to active
+//next template : v18
+//Add "stop other coroutines" in ScratchLib
 
 // private void Update()
 // {
