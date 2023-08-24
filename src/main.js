@@ -89,6 +89,11 @@ async function convert() {
         estimatedProjectSize = fileInput.size;
     }
 
+    if(fileInput == undefined){
+        SetStatus("Please provide a project to convert.");
+        return;
+    }
+
     //estimate conversion duration
     //let estimatedTime = estimatedProjectSize / 1000 / 160;
     let projectSizeMegaBytes = estimatedProjectSize / 1000 / 1000;
