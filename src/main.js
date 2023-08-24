@@ -19,11 +19,12 @@ const sb3Doc = document.getElementById('fileInput');
 //const fact = document.getElementById('fact');
 
 //conversion parameter
-const playerUsername = "player";
-const maxListLenght = 1000;
-const useCommunityBlocks = true;
-const customTranslations = [];
-const formatCode = true;
+let playerUsername = "player";
+let maxListLenght = 1000;
+let graphicsFPS = 60;
+let useCommunityBlocks = true;
+let customTranslations = [];
+let formatCode = true;
 
 //utilities
 const delay = "yield return null;";
@@ -64,8 +65,21 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 
-async function convert() {
+class ConvertionOptions{
+    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks) {
+        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks });
+    }
+}
+
+async function convert(options) {
     startTime = performance.now();
+
+    playerUsername ||= options.playerUsername;
+    graphicsFPS ||= options.graphicsFPS;
+    maxListLenght ||= options.maxListLenght;
+    useCommunityBlocks ||= options.useCommunityBlocks;
+
+
     SetStatus("Started Converting...");
 
     usedIdentifiers = [];
@@ -85,7 +99,13 @@ async function convert() {
 
     let projectID = document.getElementById('URLInput').value;
     if (projectID != "" && projectID.length > 5) {
-        fileInput = await getProjectFromID(projectID);
+        try {
+            fileInput = await getProjectFromID(projectID);
+        } catch (error) {
+            SetStatus(error);
+            throw(error);
+        }
+        
         estimatedProjectSize = fileInput.size;
     }
 
@@ -164,6 +184,7 @@ async function getProjectFromID(ID){
     const title = project.title;
 
     if (type != "sb3") {
+        SetStatus("Not a sb3 project. Consider converting this project into sb3.");
         throw new Error("Not a sb3 project. Consider converting this project into sb3.");
     }
 
