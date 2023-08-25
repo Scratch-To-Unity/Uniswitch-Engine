@@ -1,12 +1,11 @@
 ﻿let scratchProject =  null;
 
-let projectName = "untitled";
-
 let progress = 0;
 let estimatedWork = 0;
 let estimatedProjectSize = 0;
 let startTime = 0;
 let endTime = 0;
+let stopConversion = false;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
@@ -25,6 +24,8 @@ let graphicsFPS = 60;
 let useCommunityBlocks = true;
 let customTranslations = [];
 let formatCode = true;
+let scriptFPS = 60;
+let projectName = "untitled";
 
 //utilities
 const delay = "yield return null;";
@@ -66,8 +67,8 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //----------------------------------------------------MAIN--------------------------------------------------------
 
 class ConvertionOptions{
-    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks) {
-        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks });
+    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode) {
+        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode });
     }
 }
 
@@ -78,8 +79,13 @@ async function convert(options) {
     graphicsFPS ||= options.graphicsFPS;
     maxListLenght ||= options.maxListLenght;
     useCommunityBlocks ||= options.useCommunityBlocks;
+    scriptFPS ||= options.scriptFPS;
+    projectName ||= options.projectName;
+    formatCode ||= options.formatCode;
 
+    stopConversion = false;
 
+    SetStatus("Convertion options : " + options);
     SetStatus("Started Converting...");
 
     usedIdentifiers = [];
@@ -317,6 +323,14 @@ function addProgress(value = 1) {
     //console.warn("estimated work : " + estimatedWork + ".");
     document.getElementById("progressBar").innerHTML = percentage.toFixed(1) + "%";
     document.getElementById("progressBar").style.width = percentage.toFixed(2) + '%';
+    if(stopConversion)
+    {
+        throw new Error("Conversion stopped.");
+    }
+}
+
+function StopProgress(){
+    stopConversion = true;
 }
 
 const letterMap = {
