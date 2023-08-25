@@ -75,13 +75,13 @@ class ConvertionOptions{
 async function convert(options) {
     startTime = performance.now();
 
-    playerUsername ||= options.playerUsername;
-    graphicsFPS ||= options.graphicsFPS;
-    maxListLenght ||= options.maxListLenght;
-    useCommunityBlocks ||= options.useCommunityBlocks;
-    scriptFPS ||= options.scriptFPS;
-    projectName ||= options.projectName;
-    formatCode ||= options.formatCode;
+    playerUsername ||= options.playerUsername;                  //Done
+    graphicsFPS ||= options.graphicsFPS;                        //Done
+    maxListLenght ||= options.maxListLenght;                    //Done
+    useCommunityBlocks ||= options.useCommunityBlocks;          //Done
+    scriptFPS ||= options.scriptFPS;                            //Not done
+    projectName ||= options.projectName;                        //Not done
+    formatCode ||= options.formatCode;                          //Done
 
     stopConversion = false;
 
@@ -166,7 +166,14 @@ async function convert(options) {
     console.log("progress until here : " + progress);
     console.log(workspace);
     estimatedWork += workspace.length;
+    RenameProject();
     zipAndDownloadFiles(workspace);  //Action 6
+}
+
+function RenameProject(){
+    workspace.forEach(file => {
+        file.name = file.name.replace('Template Scratch', standardizeName(projectName));
+    });
 }
 
 async function getProjectFromID(ID){

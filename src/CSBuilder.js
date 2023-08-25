@@ -66,6 +66,7 @@ function addScript(sprite) {
     code += "private void Start(){";
     if (sprite.isStage) {
         code += 'spriteRenderer.sortingLayerName = "Stage";';
+        code += `"Application.targetFrameRate = ${graphicsFPS};"`;
     }
     code += 'if(isClone){';
     for (let block in blockList) {
