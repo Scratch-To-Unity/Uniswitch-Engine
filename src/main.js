@@ -81,9 +81,9 @@ async function convert(options) {
     maxListLenght ||= options.maxListLenght;                    //Done
     useCommunityBlocks ||= options.useCommunityBlocks;          //Done
     scriptFPS ||= options.scriptFPS;                            //Not done
-    projectName ||= options.projectName;                        //Not done
+    projectName ||= options.projectName;                        //Done
     formatCode ||= options.formatCode;                          //Done
-    HQPen ||= options.HQPen;                                    //Done
+    HQPen ||= options.HQPen;                                    //Not done
 
     stopConversion = false;
 
@@ -213,7 +213,10 @@ async function getProjectFromID(ID){
 
     const projectBlob = new Blob([arrayBuffer]);
     fileInput = projectBlob;
-    projectName = title;
+    if(projectName == "")
+    {
+        projectName = title;
+    }
     estimatedProjectSize = arrayBuffer.byteLength;
     return fileInput;
 }
@@ -327,6 +330,9 @@ function padStringTo16(string) {
 function addProgress(value = 1) {
     progress += value;
     let percentage = progress / estimatedWork * 100;
+    if(percentage > 100){
+        percentage = 100;
+    }
     //console.warn("progress : " + progress);
     //console.warn("progress percentage : " + percentage + "%.");
     //console.warn("estimated work : " + estimatedWork + ".");
