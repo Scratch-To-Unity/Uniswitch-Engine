@@ -103,7 +103,7 @@ async function convert(options) {
 
     if (fileInput != undefined) {
         estimatedProjectSize = fileInput.size;
-        projectName = fileInput.name;
+        projectName = getFileNameWithoutExtension(fileInput.name);
     }
 
     let linkInput = document.getElementById('URLInput').value;
