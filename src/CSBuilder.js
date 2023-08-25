@@ -51,7 +51,7 @@ function addScript(sprite) {
         });
         var lists = Object.entries(sprite.lists);
         lists.forEach(([property, value]) => {
-            var name = standardizeName(value[0]);
+            var name = standardizeName(value[0]) + 'List';
             var content = value[1];
             var type = "list";
 
@@ -305,7 +305,7 @@ function addVariables(sprite, static = "") {
         // value [0] = list name
         // value [1] = list content
 
-        var name = standardizeName(value[0]);
+        var name = standardizeName(value[0]) + 'List';
         var content = value[1];
         if (sprite.isStage) {
             //globalVariables.push({ name, type });
@@ -654,7 +654,7 @@ function addBlock(blockID) {
                 {
                     l += "ReplaceItem(";
                 }
-                var name = standardizeName(value[0]);
+                var name = standardizeName(value[0]) + 'List';
                 if (globalLists.includes(name)) {
                     l += "GlobalVariables.";
                 }else{
@@ -713,10 +713,17 @@ function addBlock(blockID) {
                     case "size":
                         l += "transform.localScale.x";
                         break;
+                    case "xposition":
+                        l += "transform.position.x";
+                        break;
+                    case "yposition":
+                        l += "transform.position.y";
+                        break;
                     default:
                         l += standardizeName(value[0]);
                         break;
                 }
+                l += ')';
                 return l;
                 break;
             case "OBJECT":
@@ -726,7 +733,7 @@ function addBlock(blockID) {
                     gameObjectName = "Stage";
                     scriptName = "StageScript";
                 }
-                l += 'GameObject.Find("';
+                l += '(GameObject.Find("';
                 l += gameObjectName;
                 l += '").GetComponent<';
                 l += scriptName;

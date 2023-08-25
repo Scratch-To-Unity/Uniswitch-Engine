@@ -97,7 +97,15 @@ async function convert(options) {
         estimatedProjectSize = fileInput.size;
     }
 
-    let projectID = document.getElementById('URLInput').value;
+    let linkInput = document.getElementById('URLInput').value;
+    const match = linkInput.match(/projects\/(\d+)\//);
+    let projectID;
+
+    if (match) {
+        projectID = match[1];
+    } else {
+        projectID = linkInput;
+    }
     if (projectID != "" && projectID.length > 5) {
         try {
             fileInput = await getProjectFromID(projectID);
