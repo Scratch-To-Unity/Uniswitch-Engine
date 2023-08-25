@@ -51,4 +51,4 @@ The converter only support .sb3 files.
 
 # Test
 
-The converter is hosted as a test build here : http://10boutons.free.fr/sb3ToUnity/Scratch-To-Unity.html
+The converter is hosted as a test build here : [Scratch-pro](http://scratch-pro.42web.io/src/UploadYourProjects.html)
