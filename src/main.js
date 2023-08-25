@@ -103,6 +103,7 @@ async function convert(options) {
 
     if (fileInput != undefined) {
         estimatedProjectSize = fileInput.size;
+        projectName = fileInput.name;
     }
 
     let linkInput = document.getElementById('URLInput').value;
@@ -328,6 +329,10 @@ function padStringTo16(string) {
 }
 
 function addProgress(value = 1) {
+    if(stopConversion)
+    {
+        throw new Error("Conversion stopped.");
+    }
     progress += value;
     let percentage = progress / estimatedWork * 100;
     if(percentage > 100){
@@ -338,14 +343,13 @@ function addProgress(value = 1) {
     //console.warn("estimated work : " + estimatedWork + ".");
     document.getElementById("progressBar").innerHTML = percentage.toFixed(1) + "%";
     document.getElementById("progressBar").style.width = percentage.toFixed(2) + '%';
-    if(stopConversion)
-    {
-        throw new Error("Conversion stopped.");
-    }
 }
 
 function StopProgress(){
     stopConversion = true;
+    progress = 0;
+    document.getElementById("progressBar").innerHTML = '0%';
+    document.getElementById("progressBar").style.width = '0%';
 }
 
 const letterMap = {
