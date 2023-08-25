@@ -26,6 +26,7 @@ let customTranslations = [];
 let formatCode = true;
 let scriptFPS = 60;
 let projectName = "untitled";
+let HQPen = false;
 
 //utilities
 const delay = "yield return null;";
@@ -67,8 +68,8 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //----------------------------------------------------MAIN--------------------------------------------------------
 
 class ConvertionOptions{
-    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode) {
-        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode });
+    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen) {
+        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen });
     }
 }
 
@@ -82,6 +83,7 @@ async function convert(options) {
     scriptFPS ||= options.scriptFPS;                            //Not done
     projectName ||= options.projectName;                        //Not done
     formatCode ||= options.formatCode;                          //Done
+    HQPen ||= options.HQPen;                                    //Done
 
     stopConversion = false;
 
