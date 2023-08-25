@@ -19,7 +19,7 @@ const sb3Doc = document.getElementById('fileInput');
 
 //conversion parameter
 let playerUsername = "player";
-let maxListLenght = 1000;
+let maxListLength = 1000;
 let graphicsFPS = 60;
 let useCommunityBlocks = true;
 let customTranslations = [];
@@ -68,17 +68,18 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //----------------------------------------------------MAIN--------------------------------------------------------
 
 class ConvertionOptions{
-    constructor(playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen) {
-        Object.assign(this, { playerUsername, graphicsFPS, maxListLenght, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen });
+    constructor(playerUsername, graphicsFPS, maxListLength, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen) {
+        Object.assign(this, { playerUsername, graphicsFPS, maxListLength, useCommunityBlocks, scriptFPS, projectName, formatCode, HQPen });
     }
 }
 
 async function convert(options) {
     startTime = performance.now();
 
+
     playerUsername ||= options.playerUsername;                  //Done
     graphicsFPS ||= options.graphicsFPS;                        //Done
-    maxListLenght ||= options.maxListLenght;                    //Done
+    maxListLength ||= options.maxListLength;                    //Done
     useCommunityBlocks ||= options.useCommunityBlocks;          //Done
     scriptFPS ||= options.scriptFPS;                            //Not done
     projectName ||= options.projectName;                        //Done
@@ -87,7 +88,8 @@ async function convert(options) {
 
     stopConversion = false;
 
-    SetStatus("Convertion options : " + options);
+    SetStatus("Convertion options : ");
+    console.log(options);
     SetStatus("Started Converting...");
 
     usedIdentifiers = [];
@@ -103,7 +105,10 @@ async function convert(options) {
 
     if (fileInput != undefined) {
         estimatedProjectSize = fileInput.size;
-        projectName = getFileNameWithoutExtension(fileInput.name);
+        if(projectName == "" || projectName == "untitled")
+        {
+            projectName = getFileNameWithoutExtension(fileInput.name);
+        }
     }
 
     let linkInput = document.getElementById('URLInput').value;

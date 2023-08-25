@@ -319,8 +319,8 @@ function addVariables(sprite, static = "") {
         l += name;
 
         l += " = new List<object> ";
-        if (value[1].length > maxListLenght) {
-            SetStatus("List " + value[0] + " is longer than " + maxListLenght + " elements. The data wasn't imported.");
+        if (value[1].length > maxListLength) {
+            SetStatus("List " + value[0] + " is longer than " + maxListLength + " elements. The data wasn't imported.");
             l += "{}";
         } else {
             //l += `{ ${content.map(item => typeof item === 'number' ? (Number.isInteger(item) ? item : item.toFixed(2) + 'f') : `"${item}"`).join(', ')}      }`;
