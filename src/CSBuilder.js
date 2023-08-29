@@ -5,13 +5,17 @@ let globalVariables = [];
 let globalLists = [];
 let localVariables = [];
 let localLists = [];
+let hatBlockIDs = [];
 
+let currentSprite;
 let warp = false;
 let loopIdx = 0;
 let currentFunctionName;
 
 function addScript(sprite) {
     SetStatus("Adding script for : " + sprite.name);
+
+    currentSprite = sprite;
 
     blockList = sprite.blocks;
     warp = false;
@@ -66,14 +70,14 @@ function addScript(sprite) {
     code += "private void Start(){";
     if (sprite.isStage) {
         code += 'spriteRenderer.sortingLayerName = "Stage";';
-        code += `"Application.targetFrameRate = ${graphicsFPS};"`;
+        code += `Application.targetFrameRate = ${graphicsFPS};`;
     }
     code += 'if(isClone){';
     for (let block in blockList) {
         if (blockList[block].topLevel == true) {
             if (blockList[block].opcode == "control_start_as_clone") {
                 startBlocks.push(block);
-                var functionName = "Start" + removeNonLetters(block);
+                var functionName = "Start" + GetStartNumber(block);
                 code += "StartCoroutine(" + functionName + "());"
             }
 
@@ -84,7 +88,7 @@ function addScript(sprite) {
         if (blockList[block].topLevel == true) {
             if (blockList[block].opcode == "event_whenflagclicked") {
                 startBlocks.push(block);
-                var functionName = "Start" + removeNonLetters(block);
+                var functionName = "Start" + GetStartNumber(block);
                 code += "StartCoroutine(" + functionName + "());"
             }
 
@@ -104,7 +108,7 @@ function addScript(sprite) {
                 code += currentBlock.fields.KEY_OPTION[0]
                 code += '")){'
                 startBlocks.push(blockID);
-                var functionName = "Start" + removeNonLetters(blockID);
+                var functionName = "Start" + GetStartNumber(blockID);
                 code += "StartCoroutine(" + functionName + "());"
                 code += "}";
             }
@@ -118,7 +122,7 @@ function addScript(sprite) {
         if (currentBlock.topLevel == true) {
             if (currentBlock.opcode == "event_whenthisspriteclicked") {
                 startBlocks.push(blockID);
-                var functionName = "Start" + removeNonLetters(blockID);
+                var functionName = "Start" + GetStartNumber(blockID);
                 code += "StartCoroutine(" + functionName + "());"
             }
         }
@@ -127,9 +131,10 @@ function addScript(sprite) {
 
     //adding all the start coroutines
     startBlocks.forEach(blockID => {
-        var functionName = "Start" + removeNonLetters(blockID);
+        var functionName = "Start" + GetStartNumber(blockID);
         currentFunctionName = functionName;
         code += "IEnumerator " + functionName + "(){";
+        code += '//Calling all the "When flag clicked" coroutines;'
         code += addBlock(blockList[blockID].next);
         code += "yield return null;}";
     });
@@ -151,12 +156,17 @@ function addScript(sprite) {
                     code += "IEnumerator Function";
                 }
 
+                SetStatus("Creating function " + prototypeID + ".");
+
                 var proceduresDefinition = standardizeName(definitionName.replace(/ %[sb]/g, ""));
                 currentFunctionName = proceduresDefinition;
                 proceduresDefinition += "(";
-                var arguments = JSON.parse(blockList[prototypeID].mutation.argumentnames);
+                let arguments = JSON.parse(blockList[prototypeID].mutation.argumentnames);
+                let argumentIDs = JSON.parse(blockList[prototypeID].mutation.argumentids);
+                let argumentDefaults = JSON.parse(blockList[prototypeID].mutation.argumentdefaults);
                 //processing value arguments
-                SetStatus("Creating function " + prototypeID + ".");
+                
+                
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
@@ -164,22 +174,30 @@ function addScript(sprite) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number") {
                             proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                            //let argDefault = argumentDefaults[arg];
+                            proceduresDefinition += ' = null';
+                            proceduresDefinition += ", ";
+                        }
+                        if (inputType == "argument_reporter_boolean") {
+                            proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                            //let argDefault = argumentDefaults[arg];
+                            proceduresDefinition += ' = null';
                             proceduresDefinition += ", ";
                         }
                     }
 
                 }
-                for (var arg = 0; arg < arguments.length; arg++) {
-                    let inputs = blockList[prototypeID].inputs
-                    let input = inputs[Object.keys(inputs)[arg]];
-                    if (input[1] != null) {
-                        let inputType = blockList[input[1]].opcode;
-                        if (inputType == "argument_reporter_boolean") {
-                            proceduresDefinition += "object " + standardizeName(arguments[arg]);
-                            proceduresDefinition += ", ";
-                        }
-                    }
-                }
+                // for (var arg = 0; arg < arguments.length; arg++) {
+                //     let inputs = blockList[prototypeID].inputs
+                //     let input = inputs[Object.keys(inputs)[arg]];
+                //     if (input[1] != null) {
+                //         let inputType = blockList[input[1]].opcode;
+                //         if (inputType == "argument_reporter_boolean") {
+                //             proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                //             proceduresDefinition += ", ";
+                //         }
+                //     }
+                // }
                 if (arguments.length > 0) {
                     proceduresDefinition = proceduresDefinition.slice(0, -2);
                 }
@@ -190,6 +208,34 @@ function addScript(sprite) {
 
                 //Add arguments
                 code += " {";
+
+                if(arguments.length > 0){
+                    code += "//Default values assigned to the parameters;";
+                }
+
+                for (var arg = 0; arg < arguments.length; arg++) {
+                    let inputs = blockList[prototypeID].inputs
+                    let input = inputs[Object.keys(inputs)[arg]];
+                    if (input[1] != null) {
+                        let inputType = blockList[input[1]].opcode;
+                        if (inputType == "argument_reporter_string_number" || inputType == "argument_reporter_boolean") {
+                            code += standardizeName(arguments[arg]);
+                            code += ' ??= "';
+                            code += argumentDefaults[arg];
+                            code += '";';
+                        }
+                        // if (inputType == "argument_reporter_boolean") {
+                        //     proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                        //     let argDefault = argumentDefaults[arg];
+                        //     proceduresDefinition += ' = null';
+                        //     proceduresDefinition += ", ";
+                        // }
+                    }
+                }
+
+                if(arguments.length > 0){
+                    code += "\n        ";
+                }
                 
                 code += addBlock(block.next);
                 if (!warp) {
@@ -217,11 +263,12 @@ function addScript(sprite) {
                 code += broadcastName;
                 usedBroadcasts.push(broadcastName);
                 code += "() {";
+                code += "//Function to call all sub-messages;"
                 //Add all the messages
                 for (var i = 0; i < broadcastNames.length; i++) {
                     if (broadcastNames[i] == broadcastName) {
                         code += "yield return StartCoroutine(Message";
-                        code += standardizeName(broadcastIDs[i]);
+                        code += GetStartNumber(broadcastIDs[i]);
                         code += "());";
                     }
                 }
@@ -264,8 +311,20 @@ function addScript(sprite) {
     console.log(code);
 }
 
+function GetStartNumber(ID){
+    AddStartNumber(ID);
+    let number = hatBlockIDs.indexOf(ID);
+    return number;
+}
+
+function AddStartNumber(ID){
+    if (!hatBlockIDs.includes(ID)) {
+        hatBlockIDs.push(ID);
+    }
+}
+
 function addVariables(sprite, static = "") {
-    var l = "\n";
+    var l = "\n    ";
     localVariables = [];
     //localLists = [];
     var variables = Object.entries(sprite.variables);
@@ -280,7 +339,7 @@ function addVariables(sprite, static = "") {
             if (!sprite.isStage) {
                 localVariables.push({ name, type });
             }
-            l += "    public ";
+            l += "public ";
             l += static;
             l += "object ";
             l += name;
@@ -299,7 +358,7 @@ function addVariables(sprite, static = "") {
             l += ";";
         }
     });
-    l += "\n";
+    l += "\n    ";
     var lists = Object.entries(sprite.lists);
     lists.forEach(([property, value]) => {
         // property = list ID
@@ -603,9 +662,10 @@ function addBlock(blockID) {
                         if (warp) {
                             l += 'return;';
                         } else {
-                            l += 'StopCoroutine("Function';
-                            l += currentFunctionName;
-                            l += '");';
+                            // l += 'StopCoroutine("Function';
+                            // l += currentFunctionName;
+                            // l += '");';
+                            l += "yield break;";
                         }
                         break;
                     default:
@@ -643,7 +703,7 @@ function addBlock(blockID) {
                 break;
             case "BROADCAST_OPTION":
                 l += "public IEnumerator Message"
-                l += standardizeName(blockID);
+                l += GetStartNumber(blockID);
                 l += "() {";
                 break;
             case "LIST":
@@ -765,6 +825,14 @@ function addBlock(blockID) {
     //adding argument inputs and separators
     var entries = Object.entries(block.inputs);
     entries.forEach(([property, value], index) => {
+        if(block.opcode == "procedures_call")
+        {
+            let procedure = FindFunction(block.mutation.proccode);
+            let arg = JSON.parse(procedure.mutation.argumentids).indexOf(property);
+            console.warn(arg);
+            l += standardizeName(JSON.parse(procedure.mutation.argumentnames)[arg]);
+            l += ": ";
+        }
         if (block.opcode == "sensing_of") { return; }
         if (value[0] === 1) {
             //written argument
@@ -802,7 +870,7 @@ function addBlock(blockID) {
                             if (inputValue == "") {
                                 l += "";
                             } else {
-                                l += '"' + value[1][1] + '"';                                
+                                l += '@"' + value[1][1] + '"';                                
                             }
                         }
                     }
@@ -819,6 +887,7 @@ function addBlock(blockID) {
                     //I hope that's alright
                     var inputValue = value[1][1];
                     inputValue = inputValue.replace(/"/g, '\\"');
+                    
                     if (inputValue == "") {
                         SetStatus("Empty input found.");
                         l += "0f";
@@ -835,7 +904,7 @@ function addBlock(blockID) {
                                 if (inputValue == "") {
                                     l += "";
                                 } else {
-                                    l += '"' + value[1][1] + '"';
+                                    l += '@"' + value[1][1] + '"';
                                 }
                             }
                         }
@@ -955,6 +1024,34 @@ function addBlock(blockID) {
         l += addBlock(block.next);
     }
     return l;
+}
+
+function FindFunction(proccode)
+{
+    console.warn("name : " + proccode);
+    let blocks = Object.entries(currentSprite.blocks);
+    console.warn(blocks);
+    let functionBlock;
+    blocks.forEach(block => {
+        if(block[1].opcode == "procedures_prototype")
+        {
+            console.warn(block[1].mutation.proccode);
+            console.warn(proccode);
+            if(block[1].mutation.proccode == proccode)
+            {
+                console.error(block[1]);
+                //return block[1];
+                functionBlock = block[1];
+            }
+        }
+    });
+    if(functionBlock == undefined)
+    {
+        SetStatus("Unknown function : " + proccode);
+        return null;
+    }else{
+        return functionBlock;
+    }
 }
 
                                 //------------------------------------------------------//
