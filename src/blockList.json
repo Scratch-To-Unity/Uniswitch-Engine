@@ -407,15 +407,15 @@
             "after": ""
         },
         "operator_and": {
-            "function": "(",
-            "separator": "&&",
+            "function": "((bool)",
+            "separator": " && (bool)",
             "close": ")",
             "delay": false,
             "after": ""
         },
         "operator_contains": {
-            "function": "",
-            "separator": ".Contains(",
+            "function": "(",
+            "separator": ").ToString().Contains(",
             "close": ".ToString())",
             "delay": false,
             "after": ""

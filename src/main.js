@@ -30,7 +30,7 @@ let HQPen = false;
 
 //utilities
 const delay = "yield return null;";
-const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth"];
+const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth", "out"];
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -45,6 +45,12 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //668Kb      => 5.1s
 //885Kb      => 7.6s
 
+//Double list declaration
+//Function cut by anti-comma => all boolean parameters aren't converted
+//iscompiledm must be replaced by false
+//empty "comment" function not complete (missing "comment")
+//if statement not escaped while having no condition
+//double quotes => remove @ and add escapes OR replace them by single-quotes OR remove them
 
 //TO DO:
 //next template : v18
@@ -77,14 +83,14 @@ async function convert(options) {
     startTime = performance.now();
 
 
-    playerUsername ||= options.playerUsername;                  //Done
-    graphicsFPS ||= options.graphicsFPS;                        //Done
-    maxListLength ||= options.maxListLength;                    //Done
-    useCommunityBlocks ||= options.useCommunityBlocks;          //Done
-    scriptFPS ||= options.scriptFPS;                            //Not done
-    projectName ||= options.projectName;                        //Done
-    formatCode ||= options.formatCode;                          //Done
-    HQPen ||= options.HQPen;                                    //Not done
+    playerUsername = options.playerUsername ?? playerUsername;                  //Done
+    graphicsFPS = options.graphicsFPS ?? graphicsFPS;                        //Done
+    maxListLength = options.maxListLength ?? maxListLength;                    //Done
+    useCommunityBlocks = options.useCommunityBlocks ?? useCommunityBlocks;          //Done
+    scriptFPS = options.scriptFPS ?? scriptFPS;                            //Not done
+    projectName = options.projectName ?? projectName;                        //Done
+    formatCode = options.formatCode ?? formatCode;                          //Done
+    HQPen = options.HQPen ?? HQPen;                                    //Not done
 
     stopConversion = false;
 
@@ -180,7 +186,7 @@ async function convert(options) {
 
 function RenameProject(){
     workspace.forEach(file => {
-        file.name = file.name.replace('Template Scratch', standardizeName(projectName));
+        file.name = file.name.replace('Template Scratch', projectName);
     });
 }
 
@@ -211,6 +217,11 @@ async function getProjectFromID(ID){
     const arrayBuffer = project.arrayBuffer;
 
     const title = project.title;
+
+    if(projectName == "" || projectName == "untitled")
+    {
+        projectName = title;
+    }
 
     if (type != "sb3") {
         SetStatus("Not a sb3 project. Consider converting this project into sb3.");
@@ -256,7 +267,7 @@ function standardizeName(name) {
 }
 
 function scratchNameToUnityName(name){
-    
+    if(name == undefined){return "";}
     let result = "";
     for (var i = 0; i < name.length; i++) {
         let char = letterMap[name[i]];

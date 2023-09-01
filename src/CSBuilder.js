@@ -165,12 +165,10 @@ function addScript(sprite) {
                 let argumentIDs = JSON.parse(blockList[prototypeID].mutation.argumentids);
                 let argumentDefaults = JSON.parse(blockList[prototypeID].mutation.argumentdefaults);
                 //processing value arguments
-                
-                
                 for (var arg = 0; arg < arguments.length; arg++) {
-                    let inputs = blockList[prototypeID].inputs
+                    let inputs = blockList[prototypeID].inputs;
                     let input = inputs[Object.keys(inputs)[arg]];
-                    if (input[1] != null) {
+                    //if (input[1] != null) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number") {
                             proceduresDefinition += "object " + standardizeName(arguments[arg]);
@@ -184,8 +182,7 @@ function addScript(sprite) {
                             proceduresDefinition += ' = null';
                             proceduresDefinition += ", ";
                         }
-                    }
-
+                    //}
                 }
                 // for (var arg = 0; arg < arguments.length; arg++) {
                 //     let inputs = blockList[prototypeID].inputs
@@ -216,7 +213,7 @@ function addScript(sprite) {
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
-                    if (input[1] != null) {
+                    //if (input[1] != null) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number" || inputType == "argument_reporter_boolean") {
                             code += standardizeName(arguments[arg]);
@@ -230,7 +227,7 @@ function addScript(sprite) {
                         //     proceduresDefinition += ' = null';
                         //     proceduresDefinition += ", ";
                         // }
-                    }
+                    //}
                 }
 
                 if(arguments.length > 0){
@@ -364,13 +361,19 @@ function addVariables(sprite, static = "") {
         // property = list ID
         // value [0] = list name
         // value [1] = list content
+        
 
         var name = standardizeName(value[0]) + 'List';
         var content = value[1];
         if (sprite.isStage) {
             //globalVariables.push({ name, type });
         } else {
-            //localLists.push({ name, type });
+            if(localLists.includes(name))
+            {
+                SetStatus("Double list found : " + name);
+                return;
+            }
+            localLists.push(name);
         }
         l += "\n    public ";
         l += static;
@@ -827,11 +830,26 @@ function addBlock(blockID) {
     entries.forEach(([property, value], index) => {
         if(block.opcode == "procedures_call")
         {
-            let procedure = FindFunction(block.mutation.proccode);
-            let arg = JSON.parse(procedure.mutation.argumentids).indexOf(property);
-            console.warn(arg);
-            l += standardizeName(JSON.parse(procedure.mutation.argumentnames)[arg]);
-            l += ": ";
+            var proceduresDefinition = standardizeName(block.mutation.proccode.replace(/ %[sb]/g, ""));
+            switch (proceduresDefinition) {
+                case "log":
+                    break;
+                case "warn":
+                    break;
+                case "error":
+                    break;
+                default:
+                    let procedure = FindFunction(block.mutation.proccode);
+                    if(procedure == undefined)
+                    {
+                        return l;
+                    }
+                    let arg = JSON.parse(procedure.mutation.argumentids).indexOf(property);
+                    console.warn(arg);
+                    l += standardizeName(JSON.parse(procedure.mutation.argumentnames)[arg]);
+                    l += ": ";
+                    break;
+            }
         }
         if (block.opcode == "sensing_of") { return; }
         if (value[0] === 1) {
@@ -1028,23 +1046,19 @@ function addBlock(blockID) {
 
 function FindFunction(proccode)
 {
-    console.warn("name : " + proccode);
     let blocks = Object.entries(currentSprite.blocks);
-    console.warn(blocks);
     let functionBlock;
+
     blocks.forEach(block => {
         if(block[1].opcode == "procedures_prototype")
         {
-            console.warn(block[1].mutation.proccode);
-            console.warn(proccode);
             if(block[1].mutation.proccode == proccode)
             {
-                console.error(block[1]);
-                //return block[1];
                 functionBlock = block[1];
             }
         }
     });
+
     if(functionBlock == undefined)
     {
         SetStatus("Unknown function : " + proccode);
