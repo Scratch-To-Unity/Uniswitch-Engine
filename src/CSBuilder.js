@@ -168,7 +168,7 @@ function addScript(sprite) {
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs;
                     let input = inputs[Object.keys(inputs)[arg]];
-                    //if (input[1] != null) {
+                    if (input[1] != null) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number") {
                             proceduresDefinition += "object " + standardizeName(arguments[arg]);
@@ -182,7 +182,7 @@ function addScript(sprite) {
                             proceduresDefinition += ' = null';
                             proceduresDefinition += ", ";
                         }
-                    //}
+                    }
                 }
                 // for (var arg = 0; arg < arguments.length; arg++) {
                 //     let inputs = blockList[prototypeID].inputs
@@ -213,7 +213,7 @@ function addScript(sprite) {
                 for (var arg = 0; arg < arguments.length; arg++) {
                     let inputs = blockList[prototypeID].inputs
                     let input = inputs[Object.keys(inputs)[arg]];
-                    //if (input[1] != null) {
+                    if (input[1] != null) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number" || inputType == "argument_reporter_boolean") {
                             code += standardizeName(arguments[arg]);
@@ -227,7 +227,7 @@ function addScript(sprite) {
                         //     proceduresDefinition += ' = null';
                         //     proceduresDefinition += ", ";
                         // }
-                    //}
+                    }
                 }
 
                 if(arguments.length > 0){
