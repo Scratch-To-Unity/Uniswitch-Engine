@@ -30,7 +30,7 @@ let HQPen = false;
 
 //utilities
 const delay = "yield return null;";
-const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth", "out"];
+const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth", "out", "in"];
 //////////////////////////////////////////////////////////////////////////////////
 
 
