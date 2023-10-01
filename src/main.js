@@ -9,7 +9,7 @@ let stopConversion = false;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v17.zip";
+const templatePath = "Templates/Template Scratch v18.zip";
 const blockLibPath = "blockList.json";
 
 
@@ -53,7 +53,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //double quotes => remove @ and add escapes OR replace them by single-quotes OR remove them
 
 //TO DO:
-//next template : v18
+//next template : v19
 //Add "stop other coroutines" in ScratchLib
 
 // private void Update()

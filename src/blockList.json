@@ -120,9 +120,9 @@
             "after": ""
         },
         "data_insertatlist": {
-            "function": ".Insert(item: ",
-            "separator": ", index: ToInt(",
-            "close": "));",
+            "function": ", ",
+            "separator": ", ",
+            "close": ");",
             "delay": false,
             "after": ""
         },

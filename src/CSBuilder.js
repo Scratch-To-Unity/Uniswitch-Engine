@@ -718,6 +718,10 @@ function addBlock(blockID) {
                 {
                     l += "ReplaceItem(";
                 }
+                if(block.opcode == "data_insertatlist")
+                {
+                    l += "Insert(";
+                }
                 var name = standardizeName(value[0]) + 'List';
                 if (globalLists.includes(name)) {
                     l += "GlobalVariables.";
