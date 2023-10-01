@@ -72,6 +72,7 @@ function addScript(sprite) {
         code += 'spriteRenderer.sortingLayerName = "Stage";';
         code += `Application.targetFrameRate = ${graphicsFPS};`;
     }
+    code += '//Calling all the "When flag clicked" coroutines;'
     code += 'if(isClone){';
     for (let block in blockList) {
         if (blockList[block].topLevel == true) {
@@ -134,7 +135,6 @@ function addScript(sprite) {
         var functionName = "Start" + GetStartNumber(blockID);
         currentFunctionName = functionName;
         code += "IEnumerator " + functionName + "(){";
-        code += '//Calling all the "When flag clicked" coroutines;'
         code += addBlock(blockList[blockID].next);
         code += "yield return null;}";
     });
@@ -781,10 +781,10 @@ function addBlock(blockID) {
                     case "size":
                         l += "transform.localScale.x";
                         break;
-                    case "xposition":
+                    case "x position":
                         l += "transform.position.x";
                         break;
-                    case "yposition":
+                    case "y position":
                         l += "transform.position.y";
                         break;
                     default:
