@@ -9,7 +9,7 @@ let stopConversion = false;
 
 //////////////////////////////////////////////////////////////////////////////////
 //paths
-const templatePath = "Templates/Template Scratch v18.zip";
+const templatePath = "Templates/Template Scratch v19.zip";
 const blockLibPath = "blockList.json";
 
 
@@ -30,7 +30,10 @@ let HQPen = false;
 
 //utilities
 const delay = "yield return null;";
-const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double", "var", "default", "event", "operator", "false", "true", "class", "return", "timer", "TIMES", "const", "static", "ScratchLib", "penWidth", "out", "in"];
+const reservedKeywords = ["ITERATION", "timer", "TIMES", "ScratchLib", "penWidth",
+"as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","else","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","if","implicit","in","int",
+"interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch",
+"this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while"];
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -53,7 +56,7 @@ const reservedKeywords = ["int", "float", "for", "ITERATION", "string", "double"
 //double quotes => remove @ and add escapes OR replace them by single-quotes OR remove them
 
 //TO DO:
-//next template : v19
+//next template : v20
 //Add "stop other coroutines" in ScratchLib
 
 // private void Update()
