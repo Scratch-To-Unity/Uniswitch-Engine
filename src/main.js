@@ -314,6 +314,10 @@ function removeNonLetters(inputString) {
     return inputString.replace(/[^a-zA-Z]/g, '');
 }
 
+function isNumber(char) {
+    return !isNaN(char);
+}
+
 function cutStringIfLong(string) {
     if (string.length > 32) {
         string = string.substring(string.length - 32);

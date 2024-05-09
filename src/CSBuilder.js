@@ -12,6 +12,12 @@ let warp = false;
 let loopIdx = 0;
 let currentFunctionName;
 
+/**
+ * Generates a C# script for the given sprite. 
+ *
+ * @param {Sprite} sprite - The sprite for which the script is being generated
+ * @return {void} 
+ */
 function addScript(sprite) {
     SetStatus("Adding script for : " + sprite.name);
 
@@ -47,6 +53,10 @@ function addScript(sprite) {
             var name = standardizeName(value[0]);
             var content = value[1];
             var type = typeof (content)
+
+            if (type == "string" && isNumber(content[0])) {
+                type = "number";
+            }
 
             if (sprite.isStage) {
                 globalVariables.push({ name, type });
@@ -143,7 +153,7 @@ function addScript(sprite) {
     let broadcastNames = [];
     let broadcastIDs = [];
     for (let blockID in blockList) {
-        var block = blockList[blockID]
+        var block = blockList[blockID];
         if (block.topLevel == true) {
             if (block.opcode == "procedures_definition") {
                 var prototypeID = block.inputs.custom_block[1];
@@ -171,9 +181,25 @@ function addScript(sprite) {
                     if (input[1] != null) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number") {
-                            proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                            let type = "object";
+                            type = FindArgumentType(argumentIDs[arg], definitionName);
+
+                            proceduresDefinition += type + " " + standardizeName(arguments[arg]);
                             //let argDefault = argumentDefaults[arg];
-                            proceduresDefinition += ' = null';
+                            switch (type) {
+                                case "float":
+                                    proceduresDefinition += ' = 0';
+                                    break;
+                                case "object":
+                                    proceduresDefinition += ' = null';
+                                    break;
+                                case "bool":
+                                    proceduresDefinition += ' = false';
+                                    break;
+                                default:
+                                    break;
+                            }
+
                             proceduresDefinition += ", ";
                         }
                         if (inputType == "argument_reporter_boolean") {
@@ -206,34 +232,34 @@ function addScript(sprite) {
                 //Add arguments
                 code += " {";
 
-                if(arguments.length > 0){
-                    code += "//Default values assigned to the parameters;";
+                if (arguments.length > 0) {
+                    code += "//Default values assigned to the parameters were removed;";
                 }
 
-                for (var arg = 0; arg < arguments.length; arg++) {
-                    let inputs = blockList[prototypeID].inputs
-                    let input = inputs[Object.keys(inputs)[arg]];
-                    if (input[1] != null) {
-                        let inputType = blockList[input[1]].opcode;
-                        if (inputType == "argument_reporter_string_number" || inputType == "argument_reporter_boolean") {
-                            code += standardizeName(arguments[arg]);
-                            code += ' ??= "';
-                            code += argumentDefaults[arg];
-                            code += '";';
-                        }
-                        // if (inputType == "argument_reporter_boolean") {
-                        //     proceduresDefinition += "object " + standardizeName(arguments[arg]);
-                        //     let argDefault = argumentDefaults[arg];
-                        //     proceduresDefinition += ' = null';
-                        //     proceduresDefinition += ", ";
-                        // }
-                    }
-                }
+                // for (var arg = 0; arg < arguments.length; arg++) {
+                //     let inputs = blockList[prototypeID].inputs
+                //     let input = inputs[Object.keys(inputs)[arg]];
+                //     if (input[1] != null) {
+                //         let inputType = blockList[input[1]].opcode;
+                //         if (inputType == "argument_reporter_string_number" || inputType == "argument_reporter_boolean") {
+                //             code += standardizeName(arguments[arg]);
+                //             code += ' ??= "';
+                //             code += argumentDefaults[arg];
+                //             code += '";';
+                //         }
+                //         // if (inputType == "argument_reporter_boolean") {
+                //         //     proceduresDefinition += "object " + standardizeName(arguments[arg]);
+                //         //     let argDefault = argumentDefaults[arg];
+                //         //     proceduresDefinition += ' = null';
+                //         //     proceduresDefinition += ", ";
+                //         // }
+                //     }
+                // }
 
-                if(arguments.length > 0){
-                    code += "\n        ";
-                }
-                
+                // if (arguments.length > 0) {
+                //     code += "\n        ";
+                // }
+
                 code += addBlock(block.next);
                 if (!warp) {
                     code += "yield return null;";
@@ -308,13 +334,13 @@ function addScript(sprite) {
     console.log(code);
 }
 
-function GetStartNumber(ID){
+function GetStartNumber(ID) {
     AddStartNumber(ID);
     let number = hatBlockIDs.indexOf(ID);
     return number;
 }
 
-function AddStartNumber(ID){
+function AddStartNumber(ID) {
     if (!hatBlockIDs.includes(ID)) {
         hatBlockIDs.push(ID);
     }
@@ -333,22 +359,34 @@ function addVariables(sprite, static = "") {
             var name = standardizeName(value[0]);
             var content = value[1];
             var type = typeof (content)
+
+            if (type == "string" && isNumber(content[0])) {
+                type = "number";
+            }
+
             if (!sprite.isStage) {
                 localVariables.push({ name, type });
             }
             l += "public ";
             l += static;
-            l += "object ";
-            l += name;
-            l += " = ";
+
             switch (type) {
                 case "boolean":
+                    l += "bool ";
+                    l += name;
+                    l += " = ";
                     l += content;
                     break;
                 case "number":
+                    l += "float ";
+                    l += name;
+                    l += " = ";
                     l += content + "f";
                     break;
                 case "string":
+                    l += "string ";
+                    l += name;
+                    l += " = ";
                     l += '"' + content + '"';
                     break;
             }
@@ -361,15 +399,14 @@ function addVariables(sprite, static = "") {
         // property = list ID
         // value [0] = list name
         // value [1] = list content
-        
+
 
         var name = standardizeName(value[0]) + 'List';
         var content = value[1];
         if (sprite.isStage) {
             //globalVariables.push({ name, type });
         } else {
-            if(localLists.includes(name))
-            {
+            if (localLists.includes(name)) {
                 SetStatus("Double list found : " + name);
                 return;
             }
@@ -423,6 +460,7 @@ function addBlock(blockID) {
     var blockRef = blockDic.blocks[block.opcode];
     if (blockRef == null) {
         unknownBlock("block", "block");
+        l += "//Unknown block : " + block.opcode + ";";
         l += addBlock(block.next);
         return l;
     }
@@ -497,7 +535,7 @@ function addBlock(blockID) {
                     var name = standardizeName(block.inputs.TIMES[1][1]);
                     if (doesArrayContainName(globalVariables, name)) {
                         l += "GlobalVariables.";
-                    }else{
+                    } else {
                         l += "this.";
                     }
                     l += name;
@@ -510,7 +548,7 @@ function addBlock(blockID) {
         l += ");";
         l += "for (int " + iteration + " = 0; " + iteration + " < " + times + "; " + iteration + "++){"
         l += addBlock(block.inputs.SUBSTACK[1]);
-        if(!warp){
+        if (!warp) {
             l += delay;
         }
         l += "}";
@@ -527,10 +565,12 @@ function addBlock(blockID) {
                 var name = standardizeName(value[0]);
                 if (doesArrayContainName(globalVariables, name)) {
                     l += "GlobalVariables.";
+                    l += name;
                 } else {
                     l += "this.";
+                    l += name;
                 }
-                l += name;
+                //l += name;
                 if (block.opcode == "data_changevariableby") {
                     l += " = Convert.ToSingle(";
                     if (doesArrayContainName(globalVariables, name)) {
@@ -597,8 +637,7 @@ function addBlock(blockID) {
                 if (value[0][0] != "_") {
                     //it's a sprite name
                     l += 'Target.sprite';
-                    if(block.opcode == "motion_goto_menu")
-                    {
+                    if (block.opcode == "motion_goto_menu") {
                         l += ', "' + value[0] + '"';
                     }
                 } else {
@@ -710,22 +749,19 @@ function addBlock(blockID) {
                 l += "() {";
                 break;
             case "LIST":
-                if(block.opcode == "data_itemoflist")
-                {
+                if (block.opcode == "data_itemoflist") {
                     l += "ElementOf(";
                 }
-                if(block.opcode == "data_replaceitemoflist")
-                {
+                if (block.opcode == "data_replaceitemoflist") {
                     l += "ReplaceItem(";
                 }
-                if(block.opcode == "data_insertatlist")
-                {
+                if (block.opcode == "data_insertatlist") {
                     l += "Insert(";
                 }
                 var name = standardizeName(value[0]) + 'List';
                 if (globalLists.includes(name)) {
                     l += "GlobalVariables.";
-                }else{
+                } else {
                     l += "this.";
                 }
                 l += name;
@@ -832,8 +868,7 @@ function addBlock(blockID) {
     //adding argument inputs and separators
     var entries = Object.entries(block.inputs);
     entries.forEach(([property, value], index) => {
-        if(block.opcode == "procedures_call")
-        {
+        if (block.opcode == "procedures_call") {
             var proceduresDefinition = standardizeName(block.mutation.proccode.replace(/ %[sb]/g, ""));
             switch (proceduresDefinition) {
                 case "log":
@@ -844,8 +879,7 @@ function addBlock(blockID) {
                     break;
                 default:
                     let procedure = FindFunction(block.mutation.proccode);
-                    if(procedure == undefined)
-                    {
+                    if (procedure == undefined) {
                         return l;
                     }
                     let arg = JSON.parse(procedure.mutation.argumentids).indexOf(property);
@@ -892,7 +926,7 @@ function addBlock(blockID) {
                             if (inputValue == "") {
                                 l += "";
                             } else {
-                                l += '@"' + value[1][1] + '"';                                
+                                l += '@"' + value[1][1] + '"';
                             }
                         }
                     }
@@ -909,7 +943,7 @@ function addBlock(blockID) {
                     //I hope that's alright
                     var inputValue = value[1][1];
                     inputValue = inputValue.replace(/"/g, '\\"');
-                    
+
                     if (inputValue == "") {
                         SetStatus("Empty input found.");
                         l += "0f";
@@ -945,13 +979,60 @@ function addBlock(blockID) {
                 if (typeof (value[1]) == "object" && value[1] != null) {
                     if (value[1][0] == 12) {
                         var name = standardizeName(value[1][1]);
-                        if (doesArrayContainName(globalVariables, name)) {
-                            l += "GlobalVariables.";
-                        }else{
-                            l += "this.";
+                        if (block.opcode == "data_setvariableto") {
+                            //Get the type of the variable who is set, not the one which is used
+                            var targetVariableName = standardizeName(block.fields.VARIABLE[0]);
+                            if (doesArrayContainName(globalVariables, name)) {
+                                let type = getTypeByName(globalVariables, targetVariableName);
+                                switch (type) {
+                                    case "boolean":
+                                        l += "(bool)";
+                                        l += "GlobalVariables.";
+                                        l += name;
+                                        break;
+                                    case "number":
+                                        l += "ToFloat(";
+                                        l += "GlobalVariables.";
+                                        l += name;
+                                        l += ")";
+                                        break;
+                                    case "string":
+                                        l += "GlobalVariables.";
+                                        l += name;
+                                        l += ".ToString()";
+                                        break;
+                                }
+                            } else {
+                                let type = getTypeByName(localVariables, targetVariableName);
+                                switch (type) {
+                                    case "boolean":
+                                        l += "(bool)";
+                                        l += "this.";
+                                        l += name;
+                                        break;
+                                    case "number":
+                                        l += "ToFloat(";
+                                        l += "this.";
+                                        l += name;
+                                        l += ")";
+                                        break;
+                                    case "string":
+                                        l += "this.";
+                                        l += name;
+                                        l += ".ToString()";
+                                        break;
+                                }
+                            }
+                        } else {
+                            if (doesArrayContainName(globalVariables, name)) {
+                                l += "GlobalVariables.";
+                            } else {
+                                l += "this.";
+                            }
+                            //adding variable name as an argument
+                            l += name;
                         }
-                        //adding variable name as an argument
-                        l += name;
+
                     }
                 } else {
                     if (value[1] == null) {
@@ -969,19 +1050,82 @@ function addBlock(blockID) {
             if (typeof (value[1]) == "object" && value[1] != null) {
                 if (value[1][0] == 12) {
                     var name = standardizeName(value[1][1]);
-                    if (doesArrayContainName(globalVariables, name)) {
-                        l += "GlobalVariables.";
-                    }else{
-                        l += "this.";
+                    if (block.opcode == "data_setvariableto") {
+                        //Get the type of the variable who is set, not the one which is used
+                        var targetVariableName = standardizeName(block.fields.VARIABLE[0]);
+                        let targetType = "null";
+                        let variableAccess = "null";
+                        if (doesArrayContainName(globalVariables, targetVariableName)) {
+                            targetType = getTypeByName(globalVariables, targetVariableName);
+                        } else {
+                            targetType = getTypeByName(localVariables, targetVariableName);
+                        }
+                        if (doesArrayContainName(globalVariables, name)) {
+                            variableAccess = "GlobalVariables.";
+                        } else {
+                            variableAccess = "this.";
+                        }
+                        switch (targetType) {
+                            case "boolean":
+                                l += "(bool)";
+                                l += variableAccess;
+                                l += name;
+                                break;
+                            case "number":
+                                l += "ToFloat(";
+                                l += variableAccess;
+                                l += name;
+                                l += ")";
+                                break;
+                            case "string":
+                                l += variableAccess;
+                                l += name;
+                                l += ".ToString()";
+                                break;
+                        }
+                    } else {
+                        if (doesArrayContainName(globalVariables, name)) {
+                            l += "GlobalVariables.";
+                        } else {
+                            l += "this.";
+                        }
+                        //adding variable name as an argument
+                        l += name;
                     }
-                    //adding variable name as an argument
-                    l += name;
                 }
             } else {
                 if (value[1] == null) {
                     l += "0f";
                 } else {
-                    l += addBlock(value[1]);
+                    if (block.opcode == "data_setvariableto") {
+                        //Get the type of the variable who is set, not the one which is used
+                        var targetVariableName = standardizeName(block.fields.VARIABLE[0]);
+                        let type = "null";
+                        if (doesArrayContainName(globalVariables, targetVariableName)) {
+                            type = getTypeByName(globalVariables, targetVariableName);
+
+                        } else {
+                            type = getTypeByName(localVariables, targetVariableName);
+                        }
+                        switch (type) {
+                            case "boolean":
+                                l += "(bool)";
+                                l += addBlock(value[1]);
+                                break;
+                            case "number":
+                                l += "ToFloat(";
+                                l += addBlock(value[1]);
+                                l += ")";
+                                break;
+                            case "string":
+                                l += addBlock(value[1]);
+                                l += ".ToString()";
+                                break;
+                        }
+                    } else {
+                        l += addBlock(value[1]);
+                    }
+
                 }
             }
 
@@ -994,7 +1138,7 @@ function addBlock(blockID) {
     if (block.opcode == "control_repeat_until") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
-        }else{
+        } else {
             l += 'false';
         }
         l += ") {";
@@ -1005,7 +1149,7 @@ function addBlock(blockID) {
     if (block.opcode == "control_if_else") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
-        }else{
+        } else {
             l += 'false';
         }
         l += ") {";
@@ -1020,7 +1164,7 @@ function addBlock(blockID) {
     if (block.opcode == "control_if") {
         if (block.inputs.CONDITION != null) {
             l += addBlock(block.inputs.CONDITION[1]);
-        }else{
+        } else {
             l += 'false';
         }
         l += ") {";
@@ -1048,45 +1192,41 @@ function addBlock(blockID) {
     return l;
 }
 
-function FindFunction(proccode)
-{
+function FindFunction(proccode) {
     let blocks = Object.entries(currentSprite.blocks);
     let functionBlock;
 
     blocks.forEach(block => {
-        if(block[1].opcode == "procedures_prototype")
-        {
-            if(block[1].mutation.proccode == proccode)
-            {
+        if (block[1].opcode == "procedures_prototype") {
+            if (block[1].mutation.proccode == proccode) {
                 functionBlock = block[1];
             }
         }
     });
 
-    if(functionBlock == undefined)
-    {
+    if (functionBlock == undefined) {
         SetStatus("Unknown function : " + proccode);
         return null;
-    }else{
+    } else {
         return functionBlock;
     }
 }
 
-                                //------------------------------------------------------//
-                                //                                                      //
-                                //      Block List Structure                            //
-                                //                                                      //
-                                //      fields           (for dropdowns like variables) //
-                                //      function         GoTo(                          //
-                                //      argument 1       1                              //
-                                //      separator        ,                              //
-                                //      argument 2       2                              //
-                                //      close            );                             //
-                                //      delay            waitforendofframe();           //
-                                //       -> nextBlock                                   //
-                                //      after                                           //
-                                //                                                      //
-                                //------------------------------------------------------//
+//------------------------------------------------------//
+//                                                      //
+//      Block List Structure                            //
+//                                                      //
+//      fields           (for dropdowns like variables) //
+//      function         GoTo(                          //
+//      argument 1       1                              //
+//      separator        ,                              //
+//      argument 2       2                              //
+//      close            );                             //
+//      delay            waitforendofframe();           //
+//       -> nextBlock                                   //
+//      after                                           //
+//                                                      //
+//------------------------------------------------------//
 
 function addNewlines(str) {
     const specialChars = ['{', '}', ';'];
@@ -1104,16 +1244,69 @@ function addNewlines(str) {
                 result = result.slice(0, -4);
             }
             result += char + spacing;
-            
+
         } else {
             result += char;
-            
+
         }
-        if(char == '"')
-        {
+        if (char == '"') {
             isInQuotes = !isInQuotes;
         }
     }
 
     return result;
+}
+
+function FindArgumentType(argumentID, definitionName) {
+    //looping through alllll the blocks to find a call to the definition, and finding which type of argument is passed (maybe)
+    for (let blockID in blockList) {
+        var block = blockList[blockID];
+        if (block.opcode == "procedures_call") {
+            if (block.mutation.proccode == definitionName) {
+                let value = block.inputs[argumentID];
+                console.log(value);
+                if (value != null) {
+                    if (value[1] != null && typeof (value[1]) == "object") {
+                        //if it's a written input
+                        if (value[1][0] == 10) {
+                            if (isNumber(value[1][1][0])) { return "float"; }
+                            return "object";
+                        }
+                        if (value[1][0] == 4 || value[1][0] == 5 || value[1][0] == 6 || value[1][0] == 7) {
+                            return "float";
+                        }
+                        //if it's a variable
+                        if (value[1][0] == 12) {
+                            var name = standardizeName(value[1][1]);
+                            let type = "null";
+                            if (doesArrayContainName(globalVariables, name)) {
+                                type = getTypeByName(globalVariables, name);
+                            } else {
+                                type = getTypeByName(localVariables, name);
+                            }
+                            switch (type) {
+                                case "boolean":
+                                    return "bool";
+                                case "number":
+                                    return "float";
+                                case "string":
+                                    return "object";
+                            } // else it's a function so we don't know, we would need to store the output format of functions in blockDic
+                        }
+                    } else {
+                        //if it's a written input
+                        if (value[1][0] == 10) {
+                            return "string";
+                        }
+                        if (value[1][0] == 4 || value[1][0] == 5 || value[1][0] == 6 || value[1][0] == 7) {
+                            return "float";
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    return "object";
 }
