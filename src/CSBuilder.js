@@ -18,7 +18,7 @@ let currentFunctionName;
  * @param {Sprite} sprite - The sprite for which the script is being generated
  * @return {void} 
  */
-function addScript(sprite) {
+function addScript(sprite, scratchProject) {
     SetStatus("Adding script for : " + sprite.name);
 
     currentSprite = sprite;
@@ -52,10 +52,43 @@ function addScript(sprite) {
         variables.forEach(([property, value]) => {
             var name = standardizeName(value[0]);
             var content = value[1];
-            var type = typeof (content)
+            let type = typeof (content)
 
             if (type == "string" && isNumber(content[0])) {
                 type = "number";
+            }
+
+            //loop through all sprites
+            for(let sprite in scratchProject.targets){
+                let spriteBlockList = scratchProject.targets[sprite].blocks;
+                for (let blockID in spriteBlockList) {
+                    var block = spriteBlockList[blockID];
+                    //find an operator code that uses the variable
+                    if (block.opcode.startsWith("operator_")) {
+                        if(block.opcode == "operator_equals" || block.opcode == "operator_letter_of") {
+                            //we can't tell if it's comparing a number or a string
+                            continue;
+                        }
+                        let isUsingTargetVariable = false;
+                        for (let input in block.inputs) {
+                            if (typeof(block.inputs[input][1]) == "object" && standardizeName(block.inputs[input][1][1]) == name) {
+                                isUsingTargetVariable = true;
+                                break;
+                            }
+                        }
+                        if(!isUsingTargetVariable) {
+                            continue;
+                        }   
+                        
+                        if(stringOperatorOpcodes.includes(block.opcode)) {
+                            type = "string";
+                            console.error(name + " : string");
+                        }else{
+                            type = "number";
+                            console.error(name + " : number");
+                        }
+                    }
+                }
             }
 
             if (sprite.isStage) {
@@ -182,12 +215,12 @@ function addScript(sprite) {
                         let inputType = blockList[input[1]].opcode;
                         if (inputType == "argument_reporter_string_number") {
                             let type = "object";
-                            type = FindArgumentType(argumentIDs[arg], definitionName);
+                            type = FindArgumentType(argumentIDs[arg], definitionName, arguments[arg]);
 
                             proceduresDefinition += type + " " + standardizeName(arguments[arg]);
                             //let argDefault = argumentDefaults[arg];
                             switch (type) {
-                                case "float":
+                                case "double":
                                     proceduresDefinition += ' = 0';
                                     break;
                                 case "object":
@@ -366,7 +399,15 @@ function addVariables(sprite, static = "") {
 
             if (!sprite.isStage) {
                 localVariables.push({ name, type });
+            }else{
+                type = globalVariables.find(variable => variable.name === name).type;
+                
             }
+
+            if(type == "number" && content == ""){
+                content = 0;
+            }
+
             l += "public ";
             l += static;
 
@@ -378,10 +419,10 @@ function addVariables(sprite, static = "") {
                     l += content;
                     break;
                 case "number":
-                    l += "float ";
+                    l += "double ";
                     l += name;
                     l += " = ";
-                    l += content + "f";
+                    l += content;
                     break;
                 case "string":
                     l += "string ";
@@ -572,7 +613,7 @@ function addBlock(blockID) {
                 }
                 //l += name;
                 if (block.opcode == "data_changevariableby") {
-                    l += " = Convert.ToSingle(";
+                    l += " = ToDouble(";
                     if (doesArrayContainName(globalVariables, name)) {
                         l += "GlobalVariables.";
                     } else {
@@ -583,7 +624,7 @@ function addBlock(blockID) {
                 }
                 break;
             case "OPERATOR":
-                l += "Mathf.";
+                l += "Math.";
                 switch (value[0]) {
                     case "sqrt":
                         l += "Sqrt(";
@@ -595,7 +636,7 @@ function addBlock(blockID) {
                         l += "Floor(";
                         break;
                     case "ceiling":
-                        l += "Ceil(";
+                        l += "Ceiling(";
                         break;
                     case "sin":
                         l += "Sin(Mathf.Deg2Rad * ";
@@ -631,7 +672,7 @@ function addBlock(blockID) {
                         unknownBlock("math operator", "field");
                         break;
                 }
-                l += "ToFloat(";
+                l += "ToDouble(";
                 break;
             case "TO":
                 if (value[0][0] != "_") {
@@ -893,7 +934,7 @@ function addBlock(blockID) {
         if (value[0] === 1) {
             //written argument
             console.log("Adding written argument " + property);
-            //special data type can also be float for variable set, but is marked as string :/
+            //special data type can also be double for variable set, but is marked as string :/
             if (block.opcode == "data_setvariableto") {
                 //get variable in local variables
                 var variable = getTypeByName(localVariables, standardizeName(block.fields.VARIABLE[0]));
@@ -991,7 +1032,7 @@ function addBlock(blockID) {
                                         l += name;
                                         break;
                                     case "number":
-                                        l += "ToFloat(";
+                                        l += "ToDouble(";
                                         l += "GlobalVariables.";
                                         l += name;
                                         l += ")";
@@ -1011,7 +1052,7 @@ function addBlock(blockID) {
                                         l += name;
                                         break;
                                     case "number":
-                                        l += "ToFloat(";
+                                        l += "ToDouble(";
                                         l += "this.";
                                         l += name;
                                         l += ")";
@@ -1072,7 +1113,7 @@ function addBlock(blockID) {
                                 l += name;
                                 break;
                             case "number":
-                                l += "ToFloat(";
+                                l += "ToDouble(";
                                 l += variableAccess;
                                 l += name;
                                 l += ")";
@@ -1113,7 +1154,7 @@ function addBlock(blockID) {
                                 l += addBlock(value[1]);
                                 break;
                             case "number":
-                                l += "ToFloat(";
+                                l += "ToDouble(";
                                 l += addBlock(value[1]);
                                 l += ")";
                                 break;
@@ -1257,10 +1298,11 @@ function addNewlines(str) {
     return result;
 }
 
-function FindArgumentType(argumentID, definitionName) {
+function FindArgumentType(argumentID, definitionName, argumentName) {
     //looping through alllll the blocks to find a call to the definition, and finding which type of argument is passed (maybe)
     for (let blockID in blockList) {
         var block = blockList[blockID];
+        //search for a procedure call
         if (block.opcode == "procedures_call") {
             if (block.mutation.proccode == definitionName) {
                 let value = block.inputs[argumentID];
@@ -1269,11 +1311,11 @@ function FindArgumentType(argumentID, definitionName) {
                     if (value[1] != null && typeof (value[1]) == "object") {
                         //if it's a written input
                         if (value[1][0] == 10) {
-                            if (isNumber(value[1][1][0])) { return "float"; }
-                            return "object";
+                            if (isNumber(value[1][1][0])) { return "double"; }
+                            //return "object";
                         }
                         if (value[1][0] == 4 || value[1][0] == 5 || value[1][0] == 6 || value[1][0] == 7) {
-                            return "float";
+                            return "double";
                         }
                         //if it's a variable
                         if (value[1][0] == 12) {
@@ -1288,9 +1330,10 @@ function FindArgumentType(argumentID, definitionName) {
                                 case "boolean":
                                     return "bool";
                                 case "number":
-                                    return "float";
+                                    return "double";
                                 case "string":
-                                    return "object";
+                                    //return "object";
+                                    break;
                             } // else it's a function so we don't know, we would need to store the output format of functions in blockDic
                         }
                     } else {
@@ -1299,11 +1342,32 @@ function FindArgumentType(argumentID, definitionName) {
                             return "string";
                         }
                         if (value[1][0] == 4 || value[1][0] == 5 || value[1][0] == 6 || value[1][0] == 7) {
-                            return "float";
+                            return "double";
                         }
                     }
                 }
+            }
+        }
 
+        //search for an argument used in the definition
+        if (block.opcode == "argument_reporter_string_number" && block.fields.VALUE[0] == argumentName) {
+            //We found an instance of the argument
+
+            //now search for the parent
+            let parent = blockList[block.parent];
+            if(parent.opcode == "procedures_prototype"){
+                continue;
+            }
+            if (parent.opcode.startsWith("operator_")) {
+                if(parent.opcode == "operator_equals" || parent.opcode == "operator_letter_of") {
+                    //we can't tell if it's comparing a number or a string
+                    continue;
+                }
+                if(stringOperatorOpcodes.includes(parent.opcode)) {
+                    return "string";
+                }else{
+                    return "double";
+                }
             }
         }
     }

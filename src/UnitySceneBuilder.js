@@ -4,10 +4,10 @@ let usedIdentifiers = [];
 function handleSprites(scratchProject) {
     var sprites = scratchProject.targets;
     estimatedWork += Object.keys(sprites).length;
-    sprites.forEach(sprite => handleSprite(sprite));
+    sprites.forEach(sprite => handleSprite(sprite, scratchProject));
 }
 
-function handleSprite(sprite) {
+function handleSprite(sprite, scratchProject) {
     addProgress();
     console.log("Handling sprite : " + sprite.name)
     //fileID : 21300000 for bitmap
@@ -17,7 +17,7 @@ function handleSprite(sprite) {
     //     fileID = "3286163911610860551";
     // }
     addGameObject(sprite.name, stringToGUID(sprite.costumes[sprite.currentCostume].assetId), sprite.x, sprite.y, (sprite.visible * 1).toString(), stringToGUID(sprite.name + "Scr"), sprite.layerOrder, sprite.size, sprite.direction, fileID, sprite.costumes);
-    addScript(sprite);
+    addScript(sprite, scratchProject);
 }
 
 function addGameObject(spriteName, costumeGUID, px, py, isShown, scriptGUID, layerOrder, scale, direction, fileID, costumes) {

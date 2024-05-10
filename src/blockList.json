@@ -57,7 +57,7 @@
             "after": ""
         },
         "control_repeat": {
-            "function": "int TIMES = Mathf.Round(ERROR",
+            "function": "int TIMES = Math.Round(ERROR",
             "separator": ");for (int ITERATION = 0; ITERATION < TIMES; ITERATION++){",
             "close": "}",
             "delay": true,
@@ -99,7 +99,7 @@
             "after": ""
         },
         "data_changevariableby": {
-            "function": " + ToFloat(",
+            "function": " + ToDouble(",
             "separator": "",
             "close": ");",
             "delay": false,
@@ -134,7 +134,7 @@
             "after": ""
         },
         "data_itemoflist": {
-            "function": ", ToFloat(",
+            "function": ", ToDouble(",
             "separator": "",
             "close": "))",
             "delay": false,
@@ -155,7 +155,7 @@
             "after": ""
         },
         "data_replaceitemoflist": {
-            "function": ", ToFloat(",
+            "function": ", ToDouble(",
             "separator": "), ",
             "close": ");",
             "delay": false,
@@ -400,8 +400,8 @@
             "after": ""
         },
         "operator_add": {
-            "function": "(ToFloat(",
-            "separator": ") + ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") + ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -421,22 +421,22 @@
             "after": ""
         },
         "operator_divide": {
-            "function": "(ToFloat(",
-            "separator": ") / ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") / ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_equals": {
-            "function": "((",
-            "separator": ").ToString() == (",
-            "close": ").ToString())",
+            "function": "(",
+            "separator": " == ",
+            "close": ")",
             "delay": false,
             "after": ""
         },
         "operator_gt": {
-            "function": "(ToFloat(",
-            "separator": ") > ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") > ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -463,8 +463,8 @@
             "after": ""
         },
         "operator_lt": {
-            "function": "(ToFloat(",
-            "separator": ") < ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") < ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -491,15 +491,15 @@
             "after": ""
         },
         "operator_mod": {
-            "function": "(ToFloat(",
-            "separator": ") % ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") % ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
         },
         "operator_multiply": {
-            "function": "(ToFloat(",
-            "separator": ") * ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") * ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -526,15 +526,15 @@
             "after": ""
         },
         "operator_round": {
-            "function": "Mathf.Round(ToFloat(",
+            "function": "ToInt(",
             "separator": "",
-            "close": "))",
+            "close": ")",
             "delay": false,
             "after": ""
         },
         "operator_subtract": {
-            "function": "(ToFloat(",
-            "separator": ") - ToFloat(",
+            "function": "(ToDouble(",
+            "separator": ") - ToDouble(",
             "close": "))",
             "delay": false,
             "after": ""
@@ -547,7 +547,7 @@
             "after": ""
         },
         "pen_changePenSizeBy": {
-            "function": "penWidth += ToFloat(",
+            "function": "penWidth += ToDouble(",
             "separator": "",
             "close": ");",
             "delay": false,
