@@ -59,6 +59,9 @@ const stringOperatorOpcodes = ["operator_contains", "operator_length", "operator
 //TO DO:
 //next template : v21
 //Add "stop other coroutines" in ScratchLib
+//Add days since 2000 in template
+//cast in procedures calls
+//missing cast in : replace item
 
 // private void Update()
 // {
@@ -74,6 +77,10 @@ const stringOperatorOpcodes = ["operator_contains", "operator_length", "operator
 //1 - 0 = 1
 //0 - 1 = -1
 //custom function I guess for boolean subtract
+
+//working projects : 
+// https://scratch.mit.edu/projects/846564765/
+// https://scratch.mit.edu/projects/1011606319/
 
 //----------------------------------------------------MAIN--------------------------------------------------------
 

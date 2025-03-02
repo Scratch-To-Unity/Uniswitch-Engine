@@ -429,8 +429,8 @@
         },
         "operator_equals": {
             "function": "(",
-            "separator": " == ",
-            "close": ")",
+            "separator": ".ToString() == ",
+            "close": ".ToString())",
             "delay": false,
             "after": ""
         },

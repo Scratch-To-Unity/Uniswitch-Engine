@@ -11,21 +11,32 @@ async function convertSvgToPng(svgString, x, y) {
         };
     });
 
+    x = 240;
+    y = 240;
+
+    
+
     // Create an in-memory canvas element
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    // Set canvas dimensions to match the image
-    const multiplier = 4;
-    canvas.width = img.width * multiplier;
-    canvas.height = img.height * multiplier;
+    
 
-    // canvas.width = 480 * multiplier;
-    // canvas.height = 360 * multiplier;
+    // Set canvas dimensions to match the image
+    const multiplier = 1;
+    // canvas.width = img.width * multiplier;
+    // canvas.height = img.height * multiplier;
+
+     canvas.width = 480 * multiplier;
+     canvas.height = 360 * multiplier;
+
+    // Fill the canvas with white color
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw the SVG image onto the canvas
     // context.drawImage(img, x * multiplier, y * multiplier, img.width * multiplier, img.height * multiplier);
-    context.drawImage(img, 0, 0, img.width * multiplier, img.height * multiplier);
+    context.drawImage(img, x * multiplier, y * multiplier, img.width * multiplier, img.height * multiplier);
 
     // Convert canvas to Blob using createImageBitmap
     const blob = await new Promise((resolve) => {

@@ -64,7 +64,7 @@ function addScript(sprite, scratchProject) {
                 for (let blockID in spriteBlockList) {
                     var block = spriteBlockList[blockID];
                     //find an operator code that uses the variable
-                    if (block.opcode.startsWith("operator_")) {
+                    if (block.opcode != null && block.opcode.startsWith("operator_")) {
                         if(block.opcode == "operator_equals" || block.opcode == "operator_letter_of") {
                             //we can't tell if it's comparing a number or a string
                             continue;
