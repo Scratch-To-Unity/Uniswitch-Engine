@@ -191,6 +191,7 @@ async function convert(options) {
     console.log("progress until here : " + progress);
     console.log(workspace);
     estimatedWork += workspace.length;
+    console.log(projectName);
     RenameProject();
     zipAndDownloadFiles(workspace);  //Action 6
 }

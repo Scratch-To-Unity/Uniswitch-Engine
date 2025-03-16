@@ -60,7 +60,7 @@ function zipAndDownloadFiles(fileArray) {
             // Create a download link element
             var link = document.createElement('a');
             link.href = URL.createObjectURL(content);
-            link.download = `"Zipped ${projectName}.zip"`
+            link.download = `Zipped ${projectName}.zip`
 
             // Simulate a click event to trigger the download
             link.click();

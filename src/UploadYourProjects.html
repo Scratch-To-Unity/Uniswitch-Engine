@@ -27,6 +27,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@turbowarp/sbdl@2.3.3/lib/bundle-standalone.min.js"></script>
 
+
 </head>
 <body>
 <div class="header">
@@ -40,68 +41,85 @@
 </div>
 <div class="rowa">
 
-    <div class="card" style="border-radius: 20px;">
+    <div class="card" style="border-radius: 20px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);">
       <input type="text" id="URLInput" class="custom-input" placeholder="https://scratch.mit.edu/projects/548289258/" onkeypress="handleKeyPress(event)">
-      <button class="custom-button" id="convertButton" onclick="convert()" style="padding: 20px;">Start conversion</button>
+      <button class="custom-button" id="convertButton" onclick="start()" style="padding: 20px;">Start conversion</button>
 
       <div style="padding-top: 10px;">
           <label>Or </label>
           <span class="file-link" onclick="document.getElementById('fileInput').click()">upload</span>
-          <input type="file" id="fileInput" accept=".sb3">
+          <input type="file" id="fileInput" accept=".sb3" onchange="sub(this)">
           <label> an .sb3 file</label>
-          <!--<label for="customFile" class="input-label">Choose a project</label> application/x.scratch -->
+          <br>
+          <label id="nameFile"></label>
       </div>
 
     </div>
 
-    <div class="card" style="border-radius: 20px;">
+    <div class="card" id="load" style="border-radius: 20px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);" hidden>
       <div id="fact" style="padding: 10px;">Press the "start conversion" button first!</div>
       <br />
-      <div id="progressBarContent" style="/*height: 20px;! padding-left: 10px; */background-color: #cacaca;border-left-width: 5px;border-left-style: solid;border-top-width: 5px;border-top-style: solid;border-right-width: 5px;border-right-style: solid;border-bottom-width: 5px;border-bottom-style: solid;margin-left: 5%;margin-right: 5%;border-radius: 10px;">
+      <div id="progressBarContent" style="/*height: 20px;! padding-left: 10px; */background-color: #cacaca;border-left-width: 5px;border-left-style: solid;border-top-width: 5px;border-top-style: solid;border-right-width: 5px;border-right-style: solid;border-bottom-width: 5px;border-bottom-style: solid;margin-left: 5%;margin-right: 5%;border-radius: 10px;cursor:progress">
           <div id="progressBar" style="height: 20px;background-color: green;width: 100%;color: white;border-radius: 5px;">Loading...</div>
       </div>
       <div id="status" style="padding: 10px;">status</div>
-
-      <button class="custom-button" onclick="StopProgress()" style="background-color: #e74c3c;" onmouseover="this.style.background-color=#c0392b;" onmouseout="this.style.background-color=#e74c3c;">Cancel</button>
+      
+      <button id="cancel-button" class="custom-button-cancel" onclick="Cancel()">Cancel</button>
+      <img id="checkmark"src="img/checkmark.png" style="width: 10%;" hidden>
 
       <div id="time" style="padding: 10px;">Estimated time : Calculating...</div>
       
   	</div>
-    <div class="card" style="border-radius: 20px;">
+    <div class="card windowCloseOpen open">
+      <h2 style="text-align: left;margin-top: 15px;margin-bottom: 31px;">Basic Options
+        <button class="toggle-button" onclick="windowOpenClose(this)">-</button>
+      </h2>
       
       <div class="label-input-container">
         <label class="param" for="playerUsername" >Player username</label>
-        <input type="text" name="playerUsername" id="playerUsername" value="player">
+        <input class="param-input" type="text" name="playerUsername" id="playerUsername" value="player####">
       </div>
       <br />
       <div class="label-input-container">
         <label class="param" for="projectname">Project name</label>
-        <input type="text" name="projectname" id="projectname" value="Untitled">
-      </div>
-      <br />
-      <div class="label-input-container">
-        <label class="param" for="maxListLenght">Max list length 1 - 200,000</label>
-        <input type="number" name="maxListLength" id="maxListLength" min="1" max="200000" value="1000">
+        <input class="param-input" type="text" name="projectname" id="projectname" placeholder="Leave blank for default project name">
       </div>
       <br />
       <div class="label-input-container">
         <label class="param" for="useCommunityBlocks">Use community blocks</label>
-        <input type="checkbox" name="useCommunityBlocks" id="useCommunityBlocks" checked style="margin-right: 32.5%;margin-left: -32.5%;">
-      </div>
-      <br />
-      <div class="label-input-container">
-        <label class="param" for="formatCode">Format code</label>
-        <input type="checkbox" name="formatCode" id="formatCode" checked style="margin-right: 32.5%;margin-left: -32.5%;">
-      </div>
-      <br />
-      <div class="label-input-container">
-        <label class="param" for="graphicfps">Graphic fps</label>
-        <input type="number" name="graphicfps" id="graphicfps" min="20" max="144" value="60">
+        <input class="param-input" type="checkbox" name="useCommunityBlocks" id="useCommunityBlocks" checked style="margin-right: 32.5%;margin-left: -32.5%;cursor: pointer;">
       </div>
       <br />
       <div class="label-input-container">
         <label class="param" for="scriptfps">Script fps</label>
-        <input type="number" name="scriptfps" id="scriptfps" min="30" max="120" value="60">
+        <input class="param-input" type="range" name="scriptfps" id="scriptfps" min="30" max="120" value="60" style="cursor: pointer;">
+        <label id="valueScriptFps">60</label>
+      </div>
+      <br />
+      <div class="label-input-container">
+        <label class="param" for="HQPen">Hight Quality Pen</label>
+        <input class="param-input" type="checkbox" name="HQPen" id="HQPen" style="margin-right: 32.5%;margin-left: -32.5%;cursor: pointer;">
+      </div>
+    </div>
+
+    <div class="card windowCloseOpen">
+      <h2 style="text-align: left;margin-top: 15px;margin-bottom: 31px;">Advanced Options 
+        <button class="toggle-button" onclick="windowOpenClose(this)">+</button>
+      </h2>
+      <div class="label-input-container">
+        <label class="param" for="maxListLength">Max list import size</label>
+        <input class="param-input" type="number" name="maxListLength" id="maxListLength" min="1" max="200000" value="1000" onkeypress="inputNumber()">
+      </div>
+      <br />
+      <div class="label-input-container">
+        <label class="param" for="formatCode">Format code</label>
+        <input class="param-input" type="checkbox" name="formatCode" id="formatCode" checked style="margin-right: 32.5%;margin-left: -32.5%;cursor: pointer;">
+      </div>
+      <br />
+      <div class="label-input-container">
+        <label class="param" for="graphicfps">Graphic fps (max 144)</label>
+        <input class="param-input" type="range" name="graphicfps" id="graphicfps" min="20" max="144" value="60" style="cursor: pointer;">
+        <label id="valueGraphicFps">60</label>
       </div>
     </div>
 
