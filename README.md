@@ -1,5 +1,5 @@
-# Scratch To Unity
- A website that converts your entire Scratch project into a Unity game. 
+# Uniswitch
+ A JavaScript module that converts your entire Scratch project into a Unity game. 
  
  You can then build it and deploy it to multiple platforms, such as Windows, Mac, Linux, Android, Ios and consoles.
 
@@ -28,9 +28,6 @@ The converter actually supports 99 different blocks such as :
 
  ![scratch to unity screenshot 4](https://github.com/Lythox-Supreme/Scratch-To-Unity/assets/139252857/c67d1823-5e9c-4d85-9415-a86d1aa79712)
 
-
-You can upload Scratch projects using the .sb3 file or its ID on the Scratch server, and it returns a .zip file containing the Unity project.
-
 # Limitations
 
 The converter actually doesn't support : 
@@ -49,6 +46,3 @@ The converter only support .sb3 files.
 
 ![ScratchLib logo2(1)](https://github.com/Lythox-Supreme/Scratch-To-Unity/assets/139252857/33da60b3-48bc-44bb-926a-cb2bac74cc62)
 
-# Test
-
-The converter is hosted as a test build here : [Scratch-pro](http://10boutons.free.fr/uniswitch/src/UploadYourProjects.html)
